@@ -521,6 +521,7 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 ### 2026-04-09
 
 - Moved `.zshrc.local.pre` sourcing from `.zshrc` to `.zshenv` so API keys and exports are available to all shells, including non-interactive ones spawned by CLI agents
+- Prepended `/opt/homebrew/opt/ruby/bin` to `PATH` so Homebrew Ruby takes precedence over macOS Ruby 2.6 and Mason can install `rubocop`, which requires Ruby 2.7+
 - Removed `docs/todo/` (code-review-report.md, tasks.json, progress.txt) — all Jan 2026 code review tasks completed
 - Removed empty `lib/` directory
 

@@ -4,6 +4,19 @@
 
 ---
 
+## Setup
+
+TL;DR:
+
+1. Symlink `"$HOME/silentcastle/projects/sc-zsh/.zshenv"` to `~/.zshenv`
+2. Create `~/.zshrc.local.pre` from `.zshrc.local.pre.example`
+3. Create `~/.zshrc.local.post` from `.zshrc.local.post.example`
+4. Start a new `zsh` session
+
+The bootstrap entrypoint is `~/.zshenv`. Once linked, it sets `ZDOTDIR` to this repo and loads your personal pre-config from `~/.zshrc.local.pre`. Interactive shell startup then continues through this repo's `.zshrc`, and late personal overrides load from `~/.zshrc.local.post`.
+
+---
+
 ## Quick Links
 
 - [Architecture](#architecture) - How sc-zsh is organized
@@ -520,6 +533,7 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ### 2026-04-09
 
+- Added a short README setup section covering the `~/.zshenv` symlink and `.zshrc.local.{pre,post}` example-file bootstrap flow
 - Moved `.zshrc.local.pre` sourcing from `.zshrc` to `.zshenv` so API keys and exports are available to all shells, including non-interactive ones spawned by CLI agents
 - Prepended `/opt/homebrew/opt/ruby/bin` to `PATH` so Homebrew Ruby takes precedence over macOS Ruby 2.6 and Mason can install `rubocop`, which requires Ruby 2.7+
 - Removed `docs/todo/` (code-review-report.md, tasks.json, progress.txt) — all Jan 2026 code review tasks completed

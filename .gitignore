@@ -1,0 +1,23 @@
+# User local overrides
+.zshrc.local.pre
+.zshrc.local.post
+
+# Zsh native caching and history
+.zcompdump*
+.zsh_history
+.zprofile
+
+# IDE and OS generated files
+.DS_Store
+
+# IDEs & Editor configurations
+.vscode/
+.cursor/
+
+# AI Agents & CLI Tools
+.claude/
+.gemini/
+.gemini-cli/
+.antigravity/
+.codex/
+.opencode/

@@ -1,0 +1,31 @@
+# WARNING: This file is designed to be sourced by sc-zsh (~/silentcastle/projects/sc-zsh).
+# Do not source this file directly; it depends on helper functions defined by sc-zsh.
+#
+# This file is sourced *after* the main .zshrc file.
+# Use it for local, personal Zsh configurations that should not be committed to the repository.
+# Examples include:
+# - Overriding or extending PATH variables.
+# - Defining personal functions or aliases.
+# - Setting environment variables specific to your local machine.
+# - Any other modifications that are unique to your development environment.
+
+# Antigravity
+if [[ -d "$HOME/.antigravity/antigravity/bin" ]]; then
+    _path_append "$HOME/.antigravity/antigravity/bin"
+fi
+
+# Toolbox (personal CLI tools and shell customization)
+if [[ -z "${TOOLBOX_LOADED:-}" && -f "$HOME/silentcastle/projects/toolbox/shell/init.sh" ]]; then
+    source "$HOME/silentcastle/projects/toolbox/shell/init.sh"
+fi
+
+# Mise (polyglot runtime manager)
+if command -v mise &>/dev/null; then
+    eval "$(mise activate zsh)"
+fi
+
+# Bun (JavaScript runtime)
+if [[ -d "$HOME/.bun/bin" ]]; then
+    export BUN_INSTALL="$HOME/.bun"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+fi

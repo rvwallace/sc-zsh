@@ -1,0 +1,27 @@
+# WARNING: This file is designed to be sourced by sc-zsh (~/silentcastle/projects/sc-zsh).
+# Do not source this file directly; it depends on helper functions defined by sc-zsh.
+#
+# This file is sourced *after* defaults.zsh but *before* the main .zshrc file and other configuration files.
+# Use it for local, personal Zsh configurations that should not be committed to the repository.
+# This is an ideal place to set default values or override existing ones that might be set later.
+# Examples include:
+# - Overriding or extending PATH variables.
+# - Defining personal functions or aliases.
+# - Setting environment variables specific to your local machine (e.g., GITHUB_USER, SSH_KEY_WEBSERVER).
+# - Setting default flags (e.g., ENABLE_STARSHIP=false to override a default from defaults.zsh).
+# - Any other modifications that are unique to your development environment and need to be loaded early.
+
+# --- Identity ---
+export JUMPCLOUD_USER=your-jumpcloud-username
+export JUMPCLOUD_KEY=~/.ssh/id_rsa_jumpcloud
+
+# --- Cloudflare ---
+export CLOUDFLARE_API_TOKEN="your-cloudflare-api-token"
+
+# --- API Keys ---
+export CONTEXT7_API_KEY="your-context7-api-key"
+export BRAVE_API_KEY="your-brave-api-key"
+export EXA_API_KEY="your-exa-api-key"
+
+# --- Paths ---
+export OBSIDIAN_VAULT=~/path/to/obsidian/vault

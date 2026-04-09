@@ -1,0 +1,5 @@
+#compdef rm.dstore
+# Completion for rm.dstore (Remove .DS_Store files)
+
+_arguments \
+  '*:base directory:_directories'

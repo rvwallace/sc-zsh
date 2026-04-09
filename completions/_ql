@@ -1,0 +1,5 @@
+#compdef ql
+# Completion for ql (Quick Look)
+
+_arguments \
+  '*:file:_files'

@@ -1,0 +1,11 @@
+#autoload
+# Quick Look files (macOS)
+
+emulate -L zsh
+
+if (( $# == 0 )); then
+    echo "Usage: ql <file> [<file> ...]" >&2
+    return 1
+fi
+
+qlmanage -p "$@" &>/dev/null &

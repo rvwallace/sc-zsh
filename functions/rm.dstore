@@ -1,0 +1,6 @@
+#autoload
+# Remove .DS_Store files recursively
+
+emulate -L zsh
+
+find "${@:-.}" -type f -name .DS_Store -delete

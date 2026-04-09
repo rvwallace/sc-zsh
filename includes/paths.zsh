@@ -44,6 +44,7 @@ _path_prepend "$HOME/.cargo/bin"
 _path_prepend "$HOME/.local/bin"
 _path_prepend "$HOME/go/bin"
 _path_prepend "$HOME/.npm-global/bin"
+_path_prepend "/opt/homebrew/opt/ruby/bin"
 
 # Export the updated PATH from the array
 # Note: (j/:/) is Zsh join syntax - joins array elements with ':' delimiter

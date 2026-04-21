@@ -65,9 +65,9 @@ sudo-command-line() {
     zle redisplay
 }
 zle -N sudo-command-line
-# Bind to Esc-Esc (Double Escape)
-bindkey -M emacs '\e\e' sudo-command-line
-bindkey -M viins '\e\e' sudo-command-line
+# Bind to Alt+s
+bindkey -M emacs '\es' sudo-command-line
+bindkey -M viins '\es' sudo-command-line
 
 # Cmux Integrations
 if [[ -n "$CMUX_WORKSPACE_ID" ]]; then

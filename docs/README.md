@@ -531,6 +531,10 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ## Change Log
 
+### 2026-04-22
+
+- Removed directory stack persistence setup and hooks from `includes/options.zsh`
+
 ### 2026-04-09
 
 - Added a short README setup section covering the `~/.zshenv` symlink and `.zshrc.local.{pre,post}` example-file bootstrap flow

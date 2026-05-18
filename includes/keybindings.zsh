@@ -34,10 +34,6 @@ key[Backspace]="${terminfo[kbs]}"
 [[ -n "${key[PageUp]}" ]] && bindkey -- "${key[PageUp]}" beginning-of-buffer-or-history
 [[ -n "${key[PageDown]}" ]] && bindkey -- "${key[PageDown]}" end-of-buffer-or-history
 
-# Standard Control-key bindings (not terminal-dependent)
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-
 # -----------------
 # ZLE Widgets
 # -----------------

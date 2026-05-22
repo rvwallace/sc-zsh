@@ -84,13 +84,8 @@ alias ansible-vault='uv run --with ansible-core ansible-vault'
 alias ansible-galaxy='uv run --with ansible-core ansible-galaxy'
 alias ansible-lint='uv run --with ansible-lint ansible-lint'
 
-# Terraform
-alias tf='terraform'
-alias tf.plan='tf plan -out=tfplan'
-alias tf.apply='tf apply tfplan'
-alias tf.destroy.plan='tf plan -destroy -out=tfplan'
-alias tfswitch='tfswitch -b ~/.local/bin/terraform'
-
+# Terraform: toolbox/shell/modules/terraform.{sh,zsh,bash} (tf, tf.plan.save, tfswitch hook, …)
+# Source toolbox init.sh from ~/.zshrc.local.post — see docs/terraform.md in toolbox repo.
 
 # Homebrew
 alias brew.bundle="brew bundle dump --global --force"

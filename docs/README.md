@@ -292,7 +292,7 @@ Portable keybindings that work across terminals:
    - Location: `~/.sc-zsh/functions/ssh.env`
    - Pattern: `namespace.command` (e.g. `ssh.add_key`)
 
-**Note:** `aws.env`, `chef.env`, `k.env` and their helpers have moved to `toolbox/shell/modules/` — do not re-add them here.
+**Note:** `aws.env`, `chef.env`, `k.env`, and Terraform helpers (`tf`, `tf.plan.save`, `tfswitch` hook, …) live in `toolbox/shell/modules/` — do not re-add them here. See `toolbox/docs/terraform.md`.
 
 **Not migrating:**
 
@@ -543,12 +543,17 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 - Removed `docs/todo/` (code-review-report.md, tasks.json, progress.txt) — all Jan 2026 code review tasks completed
 - Removed empty `lib/` directory
 
+### 2026-05-22
+
+- Removed Terraform aliases from `includes/aliases.zsh` (now in `toolbox/shell/modules/terraform.sh`; MR helpers in `docs/terraform.md`)
+- `tfswitch` chpwd hook consolidated under toolbox `terraform` stem (`terraform.zsh` / `terraform.bash`; retired `tfswitch.zsh`)
+
 ### 2026-04-02
 
 - Migrated `lib/aws-regions.zsh` and `lib/aws-profiles-cache.zsh` + `aws.caller_identity` to `toolbox/shell/modules/aws.sh`
 - Migrated zsh completions for `aws.env`, `chef.env`, `k.env` to `toolbox/shell/modules/{aws,chef,kube}.zsh`
 - Migrated zmx shell functions to `toolbox/shell/modules/zmx.sh` + `zmx.zsh`
-- Migrated `tfswitch` chpwd auto-switch hook to `toolbox/shell/modules/tfswitch.zsh`
+- Migrated `tfswitch` chpwd auto-switch hook to toolbox (`terraform.zsh`; later unified under `terraform` stem)
 - Migrated `tp` tmux popup helper to `toolbox/shell/modules/tmux.sh` + `tmux.zsh`
 - Migrated cmux zsh completions to `toolbox/shell/modules/cmux.zsh`
 - Updated `aliases.zsh` and `defaults.zsh` to remove items migrated to toolbox

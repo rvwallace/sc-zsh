@@ -531,6 +531,10 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ## Change Log
 
+### 2026-06-08
+
+- Bound terminfo-derived Up/Down arrow sequences to `zsh-history-substring-search` widgets for portable history search behavior
+
 ### 2026-04-22
 
 - Removed directory stack persistence setup and hooks from `includes/options.zsh`

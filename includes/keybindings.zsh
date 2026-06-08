@@ -31,6 +31,8 @@ key[Backspace]="${terminfo[kbs]}"
 [[ -n "${key[Insert]}" ]] && bindkey -- "${key[Insert]}" overwrite-mode
 [[ -n "${key[Delete]}" ]] && bindkey -- "${key[Delete]}" delete-char
 [[ -n "${key[Backspace]}" ]] && bindkey -- "${key[Backspace]}" backward-delete-char
+[[ -n "${key[Up]}" ]] && bindkey -- "${key[Up]}" history-substring-search-up
+[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" history-substring-search-down
 [[ -n "${key[PageUp]}" ]] && bindkey -- "${key[PageUp]}" beginning-of-buffer-or-history
 [[ -n "${key[PageDown]}" ]] && bindkey -- "${key[PageDown]}" end-of-buffer-or-history
 
@@ -194,4 +196,3 @@ _copy_buffer() {
 zle -N _copy_buffer
 bindkey -M emacs "^X\\" _copy_buffer
 bindkey -M viins "^X\\" _copy_buffer
-

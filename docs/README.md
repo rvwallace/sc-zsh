@@ -271,9 +271,29 @@ Portable keybindings that work across terminals:
 - **eza** - Modern ls replacement (via OMZ plugin)
 - **Carapace** - **Primary completion system** providing comprehensive completion support for hundreds of CLI tools (wait"1")
 - **Homebrew** - Command-not-found handler (wait"1")
-- **Shell-GPT** - AI assistant with keybinding ^X; (wait"1")
 
 **Completion Strategy:** Carapace handles most tool completions automatically, eliminating the need for individual completion files or multiple OMZ completion plugins.
+
+#### Starship AWS Token TTL
+
+`includes/app_integrations.zsh` caches AWS token time remaining in `SC_AWS_TOKEN_TTL` before each prompt. The cache refreshes at most once every 60 seconds by reading `x_security_token_expires` from `~/.aws/credentials`, avoiding a per-prompt Python or `uv` process.
+
+Starship can display the cached value with:
+
+```toml
+[env_var.SC_AWS_TOKEN_TTL]
+format = "[$symbol$env_value]($style) "
+style = "bold blue"
+symbol = "⌛️ "
+variable = "SC_AWS_TOKEN_TTL"
+```
+
+Optional overrides:
+
+```zsh
+SC_AWS_TOKEN_CACHE_SECONDS=30   # Default: 60
+SC_AWS_TOKEN_PROFILE=techops    # Default: techops
+```
 
 ---
 
@@ -534,6 +554,10 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ### 2026-06-08
 
+- Documented the Starship `SC_AWS_TOKEN_TTL` configuration and cache behavior
+- Removed stale Shell-GPT app integration documentation
+- Added a cached AWS token TTL prompt variable refreshed from Zsh instead of running the token helper on every Starship render
+- Changed feature flags in `includes/defaults.zsh` to preserve existing environment overrides
 - Loaded `zsh-history-substring-search` before `fast-syntax-highlighting` so history widgets exist before the highlighter binds ZLE widgets
 - Filtered evalcache cache-miss notices from startup while preserving other stderr output
 - Swapped `zsh-users/zsh-syntax-highlighting` for `zdharma-continuum/fast-syntax-highlighting`

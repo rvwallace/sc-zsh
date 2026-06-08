@@ -45,9 +45,13 @@ zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 # Fast core plugins with for-syntax (using light mode for better performance)
 zinit wait"0" lucid light-mode for \
-    zsh-users/zsh-syntax-highlighting \
+    zdharma-continuum/fast-syntax-highlighting \
     zsh-users/zsh-autosuggestions \
     chrissicool/zsh-256color
+
+# Cache generated shell init output for synchronous app integrations.
+zinit ice lucid
+zinit light mroth/evalcache
 
 # Completions (loaded last with zicompinit + zicdreplay for optimal performance)
 zinit wait"0" lucid light-mode blockf \

@@ -73,9 +73,9 @@ sc-zsh is a modular, performance-optimized Zsh configuration system. Current sta
 
 **Current plugins:**
 
-- zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions
+- fast-syntax-highlighting, zsh-autosuggestions, zsh-completions
 - zsh-256color, fzf-tab, zsh-history-substring-search
-- zsh-you-should-use
+- zsh-you-should-use, evalcache
 - OMZ snippets: eza, extract, gitignore, gnu-utils
 
 **Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which provides comprehensive completion support across multiple shells and tools.

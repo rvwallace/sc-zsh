@@ -23,7 +23,11 @@ fi
 # Load synchronously - must be ready before first prompt renders
 if (( $+commands[starship] )) && [[ "${ENABLE_STARSHIP:-true}" == "true" ]]; then
     export STARSHIP_LOG="error" # suppress warnings
-    eval "$(starship init zsh)"
+    if (( ${+functions[_evalcache]} )); then
+        _evalcache starship init zsh
+    else
+        eval "$(starship init zsh)"
+    fi
 fi
 
 # -----------------
@@ -40,7 +44,13 @@ fi
 # -----------------
 # FZF - Load after prompt (wait"1")
 if (( $+commands[fzf] )); then
-    zinit ice wait"1" lucid atload'eval "$(fzf --zsh)"'
+    zinit ice wait"1" lucid atload'
+        if (( ${+functions[_evalcache]} )); then
+            _evalcache fzf --zsh
+        else
+            eval "$(fzf --zsh)"
+        fi
+    '
     zinit light zdharma-continuum/null
     if [[ -z "$FZF_DEFAULT_COMMAND" ]]; then
         if (( $+commands[fd] )); then
@@ -57,14 +67,24 @@ fi
 if (( $+commands[carapace] )); then
     zinit ice wait"1" lucid atload'
         export CARAPACE_BRIDGES="gen,zsh,fish,bash,inshellisense"
-        source <(carapace _carapace zsh)
+        if (( ${+functions[_evalcache]} )); then
+            _evalcache carapace _carapace zsh
+        else
+            source <(carapace _carapace zsh)
+        fi
     '
     zinit light zdharma-continuum/null
 fi
 
 # Zoxide (Smart Directory Jumper) - Load after prompt (wait"1")
 if (( $+commands[zoxide] )); then
-    zinit ice wait"1" lucid atload'eval "$(zoxide init --cmd cd zsh)"'
+    zinit ice wait"1" lucid atload'
+        if (( ${+functions[_evalcache]} )); then
+            _evalcache zoxide init --cmd cd zsh
+        else
+            eval "$(zoxide init --cmd cd zsh)"
+        fi
+    '
     zinit light zdharma-continuum/null
 fi
 

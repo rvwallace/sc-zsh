@@ -170,10 +170,11 @@ zinit light author/plugin-name
 
 **Current plugins:**
 
-- zsh-syntax-highlighting
+- fast-syntax-highlighting
 - zsh-autosuggestions
 - zsh-completions
 - zsh-256color
+- evalcache
 - fzf-tab
 - zsh-history-substring-search
 - zsh-you-should-use
@@ -533,6 +534,8 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ### 2026-06-08
 
+- Swapped `zsh-users/zsh-syntax-highlighting` for `zdharma-continuum/fast-syntax-highlighting`
+- Added `mroth/evalcache` and routed generated app init output through `_evalcache` where available
 - Bound terminfo-derived Up/Down arrow sequences to `zsh-history-substring-search` widgets for portable history search behavior
 
 ### 2026-04-22

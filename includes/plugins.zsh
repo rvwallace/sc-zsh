@@ -43,6 +43,19 @@ fi
 # OMZ git plugin (loaded early, no wait - provides aliases/functions)
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
+# History substring search widgets must exist before the syntax highlighter
+# binds ZLE widgets, otherwise the highlighter reports unhandled widget names.
+zinit ice lucid
+zinit light zsh-users/zsh-history-substring-search
+
+# Keybindings for history search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
 # Fast core plugins with for-syntax (using light mode for better performance)
 zinit wait"0" lucid light-mode for \
     zdharma-continuum/fast-syntax-highlighting \
@@ -76,18 +89,6 @@ if (( ${+functions[fzf-tab-complete]} )); then
     zstyle ':fzf-tab:complete:cd:*' fzf-preview "ls \$realpath"
     zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview "ls \$realpath"
 fi
-
-# History substring search
-zinit ice wait"1" lucid
-zinit light zsh-users/zsh-history-substring-search
-
-# Keybindings for history search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-bindkey -M emacs '^P' history-substring-search-up
-bindkey -M emacs '^N' history-substring-search-down
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
 
 # -----------------
 # 5. OMZ Snippets

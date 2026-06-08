@@ -17,6 +17,14 @@ if ! command -v zinit &> /dev/null; then
     return 1 2>/dev/null || exit 1
 fi
 
+_sc_evalcache() {
+    (( ${+functions[_evalcache]} )) || return 1
+
+    _evalcache "$@" 2> >(
+        command grep -v '^evalcache: .* initialization not cached, caching output of:' >&2
+    )
+}
+
 # -----------------
 # 1. Prompt (Starship)
 # -----------------
@@ -24,7 +32,7 @@ fi
 if (( $+commands[starship] )) && [[ "${ENABLE_STARSHIP:-true}" == "true" ]]; then
     export STARSHIP_LOG="error" # suppress warnings
     if (( ${+functions[_evalcache]} )); then
-        _evalcache starship init zsh
+        _sc_evalcache starship init zsh
     else
         eval "$(starship init zsh)"
     fi
@@ -46,7 +54,7 @@ fi
 if (( $+commands[fzf] )); then
     zinit ice wait"1" lucid atload'
         if (( ${+functions[_evalcache]} )); then
-            _evalcache fzf --zsh
+            _sc_evalcache fzf --zsh
         else
             eval "$(fzf --zsh)"
         fi
@@ -68,7 +76,7 @@ if (( $+commands[carapace] )); then
     zinit ice wait"1" lucid atload'
         export CARAPACE_BRIDGES="gen,zsh,fish,bash,inshellisense"
         if (( ${+functions[_evalcache]} )); then
-            _evalcache carapace _carapace zsh
+            _sc_evalcache carapace _carapace zsh
         else
             source <(carapace _carapace zsh)
         fi
@@ -80,7 +88,7 @@ fi
 if (( $+commands[zoxide] )); then
     zinit ice wait"1" lucid atload'
         if (( ${+functions[_evalcache]} )); then
-            _evalcache zoxide init --cmd cd zsh
+            _sc_evalcache zoxide init --cmd cd zsh
         else
             eval "$(zoxide init --cmd cd zsh)"
         fi

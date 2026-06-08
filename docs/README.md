@@ -534,6 +534,8 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ### 2026-06-08
 
+- Loaded `zsh-history-substring-search` before `fast-syntax-highlighting` so history widgets exist before the highlighter binds ZLE widgets
+- Filtered evalcache cache-miss notices from startup while preserving other stderr output
 - Swapped `zsh-users/zsh-syntax-highlighting` for `zdharma-continuum/fast-syntax-highlighting`
 - Added `mroth/evalcache` and routed generated app init output through `_evalcache` where available
 - Bound terminfo-derived Up/Down arrow sequences to `zsh-history-substring-search` widgets for portable history search behavior

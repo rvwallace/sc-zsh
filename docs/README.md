@@ -109,12 +109,14 @@ SC_USER_COMPLETIONS_DIR="${SC_USER_COMPLETIONS_DIR:-${SC_USER_DIR}/completions}"
 
 ### Optimizations Applied
 
-1. **Zinit turbo mode** - Deferred plugin loading (`wait"0"`, `wait"1"`)
+1. **Zinit turbo mode** - Staggered deferred loading (`wait"0"` through `wait"4"`)
 2. **Light mode** - Faster plugin loading without reporting overhead
 3. **For-syntax** - Consolidated plugin declarations
 4. **zicompinit + zicdreplay** - Optimized completion initialization
 5. **24-hour completion cache** - Rebuild only once per day
-6. **Deferred .zshrc.local.post** - Non-critical customizations load async
+6. **Deferred .zshrc.local.post** - Non-critical customizations load after core integrations
+
+Zinit's deferred jobs run in the main shell process rather than in the background. Staggering them reduces ZLE pauses by avoiding a single large timer boundary. Deferred `atload` callbacks use `nocd` so tmux cannot observe a plugin directory as the pane's working directory while a callback runs.
 
 ### Performance Features
 
@@ -270,7 +272,7 @@ Portable keybindings that work across terminals:
 - **zoxide** - Smart directory jumper (wait"1")
 - **eza** - Modern ls replacement (via OMZ plugin)
 - **Carapace** - **Primary completion system** providing comprehensive completion support for hundreds of CLI tools (wait"1")
-- **Homebrew** - Command-not-found handler (wait"1")
+- **Homebrew** - Command-not-found handler (wait"3")
 
 **Completion Strategy:** Carapace handles most tool completions automatically, eliminating the need for individual completion files or multiple OMZ completion plugins.
 
@@ -551,6 +553,13 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 ---
 
 ## Change Log
+
+### 2026-08-11
+
+- Staggered deferred Zinit jobs to prevent plugins, app integrations, and local customizations from blocking ZLE at the same one-second boundary
+- Prevented deferred `atload` callbacks from temporarily changing the shell directory while tmux may inspect the pane path
+- Removed toolbox's redundant completion initialization while preserving its deferred `compdef` registrations
+- Applied fzf-tab preview styles when the deferred plugin loads instead of checking for it before it is available
 
 ### 2026-06-08
 

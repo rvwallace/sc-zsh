@@ -67,8 +67,8 @@ zinit ice lucid
 zinit light mroth/evalcache
 
 # Completions (loaded last with zicompinit + zicdreplay for optimal performance)
-zinit wait"0" lucid light-mode blockf \
-    atpull'zinit creinstall -q .' \
+zinit wait"0" lucid light-mode nocd blockf \
+    atpull'zinit creinstall -q zsh-users/zsh-completions' \
     atload"zicompinit; zicdreplay" for \
         zsh-users/zsh-completions
 
@@ -77,25 +77,22 @@ zinit wait"0" lucid light-mode blockf \
 # -----------------
 
 # FZF tab completion (conditional on fzf being available)
-zinit ice wait"1" lucid has'fzf'
+zinit ice wait"1" lucid nocd has'fzf' atload'
+    zstyle ":fzf-tab:complete:cd:*" fzf-preview "ls \$realpath"
+    zstyle ":fzf-tab:complete:__zoxide_z:*" fzf-preview "ls \$realpath"
+'
 zinit light Aloxaf/fzf-tab
 
 # Alias reminder - tells you when you type a command you have an alias for
-zinit ice wait"1" lucid
+zinit ice wait"3" lucid
 zinit light MichaelAquilina/zsh-you-should-use
-
-# FZF tab configuration (only if fzf-tab loaded)
-if (( ${+functions[fzf-tab-complete]} )); then
-    zstyle ':fzf-tab:complete:cd:*' fzf-preview "ls \$realpath"
-    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview "ls \$realpath"
-fi
 
 # -----------------
 # 5. OMZ Snippets
 # -----------------
 mkdir -p "$ZSH_CACHE_DIR/completions"
 
-zinit wait"1" lucid for \
+zinit wait"3" lucid for \
     OMZP::eza \
     OMZP::extract \
     OMZP::gitignore \

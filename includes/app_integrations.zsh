@@ -110,9 +110,9 @@ fi
 # -----------------
 # 2. System Info
 # -----------------
-# Load after prompt (wait"1") - fastfetch only runs once on startup
+# Load after optional integrations (wait"4") - fastfetch only runs once on startup
 if (( $+commands[fastfetch] )) && [[ "${ENABLE_FASTFETCH:-false}" == "true" ]]; then
-    zinit ice wait"1" lucid atload'fastfetch'
+    zinit ice wait"4" lucid nocd atload'fastfetch'
     zinit light zdharma-continuum/null
 fi
 
@@ -121,7 +121,7 @@ fi
 # -----------------
 # FZF - Load after prompt (wait"1")
 if (( $+commands[fzf] )); then
-    zinit ice wait"1" lucid atload'
+    zinit ice wait"1" lucid nocd atload'
         if (( ${+functions[_evalcache]} )); then
             _sc_evalcache fzf --zsh
         else
@@ -142,7 +142,7 @@ fi
 
 # Carapace (Completion Bridge) - Load after prompt (wait"1")
 if (( $+commands[carapace] )); then
-    zinit ice wait"1" lucid atload'
+    zinit ice wait"1" lucid nocd atload'
         export CARAPACE_BRIDGES="gen,zsh,fish,bash,inshellisense"
         if (( ${+functions[_evalcache]} )); then
             _sc_evalcache carapace _carapace zsh
@@ -155,7 +155,7 @@ fi
 
 # Zoxide (Smart Directory Jumper) - Load after prompt (wait"1")
 if (( $+commands[zoxide] )); then
-    zinit ice wait"1" lucid atload'
+    zinit ice wait"1" lucid nocd atload'
         if (( ${+functions[_evalcache]} )); then
             _sc_evalcache zoxide init --cmd cd zsh
         else
@@ -168,9 +168,9 @@ fi
 # -----------------
 # 4. Utilities
 # -----------------
-# Homebrew command not found handler - Load after prompt (wait"1")
+# Homebrew command not found handler - Load after other utilities (wait"3")
 if (( $+commands[brew] )); then
-    zinit ice wait"1" lucid atload'
+    zinit ice wait"3" lucid nocd atload'
         HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
         if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
             source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER"

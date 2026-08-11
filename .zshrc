@@ -71,10 +71,10 @@ _source "$ZDOTDIR/includes/keybindings.zsh"
 _source "$ZDOTDIR/includes/app_integrations.zsh"
 _source "$ZDOTDIR/includes/aliases.zsh"
 
-# Defer loading of user's local post-config (customizations that don't need to block startup)
+# Defer local customizations until core completion and navigation jobs are loaded.
 # This is safe to defer as it's user-specific customizations, not core functionality
 if [[ -f "$_zshrc_local_post" ]] && command -v zinit &> /dev/null; then
-    zinit ice wait"1" lucid atload"source '$_zshrc_local_post'"
+    zinit ice wait"2" lucid nocd atload"source '$_zshrc_local_post'"
     zinit light zdharma-continuum/null
 elif [[ -f "$_zshrc_local_post" ]]; then
     # Fallback if zinit isn't available (shouldn't happen, but safe fallback)

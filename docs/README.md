@@ -6,22 +6,22 @@
 
 ## Setup
 
-TL;DR:
+Quick start:
 
-1. Symlink `"$HOME/silentcastle/projects/sc-zsh/.zshenv"` to `~/.zshenv`
-2. Create `~/.zshrc.local.pre` from `.zshrc.local.pre.example`
-3. Create `~/.zshrc.local.post` from `.zshrc.local.post.example`
+1. Link `"$HOME/silentcastle/projects/sc-zsh/.zshenv"` to `~/.zshenv`
+2. Copy `.zshrc.local.pre.example` to `~/.zshrc.local.pre`
+3. Copy `.zshrc.local.post.example` to `~/.zshrc.local.post`
 4. Start a new `zsh` session
 
-The bootstrap entrypoint is `~/.zshenv`. Once linked, it sets `ZDOTDIR` to this repo and loads your personal pre-config from `~/.zshrc.local.pre`. Interactive shell startup then continues through this repo's `.zshrc`, and late personal overrides load from `~/.zshrc.local.post`.
+The bootstrap entrypoint is `~/.zshenv`. Once linked, it sets `ZDOTDIR` to this repository and loads personal pre-config from `~/.zshrc.local.pre`. Interactive shell startup continues through `.zshrc`. Late personal overrides load from `~/.zshrc.local.post`.
 
 ---
 
 ## Quick Links
 
-- [Architecture](#architecture) - How sc-zsh is organized
+- [Architecture](#architecture) - Organization of sc-zsh
 - [Performance](#performance) - Optimization results and tips
-- [Customization](#customization) - How to extend sc-zsh
+- [Customization](#customization) - Ways to extend sc-zsh
 - [Migration Guide](#migration-guide) - Moving from .myenv
 - [Decision Log](#decision-log) - Key architectural decisions
 
@@ -33,9 +33,9 @@ The bootstrap entrypoint is `~/.zshenv`. Once linked, it sets `ZDOTDIR` to this 
 
 1. **Simple, not over-engineered** - Avoid unnecessary abstraction
 2. **Modular** - Clear separation of concerns
-3. **Performant** - Optimized startup (currently ~0.17s)
-4. **Separation of scripts from startup** - Keep shell startup lean
-5. **Python for complexity, shell for simplicity** - Right tool for the job
+3. **Performant** - Fast startup (currently ~0.17s)
+4. **Lean shell startup** - Keep scripts separate from shell startup
+5. **Python for complexity, shell for simplicity** - Use the right tool for each job
 
 ### Directory Structure
 
@@ -103,26 +103,26 @@ SC_USER_COMPLETIONS_DIR="${SC_USER_COMPLETIONS_DIR:-${SC_USER_DIR}/completions}"
 
 ### Current Metrics
 
-- **Startup time:** ~0.17s (down from 0.9s)
+- **Startup time:** ~0.17s (reduced from 0.9s)
 - **Improvement:** 81% faster
 - **Method:** `SC_PROFILE=1 zsh` to profile
 
 ### Optimizations Applied
 
 1. **Zinit turbo mode** - Staggered deferred loading (`wait"0"` through `wait"4"`)
-2. **Light mode** - Faster plugin loading without reporting overhead
+2. **Light mode** - Fast plugin loading without reporting overhead
 3. **For-syntax** - Consolidated plugin declarations
-4. **zicompinit + zicdreplay** - Optimized completion initialization
-5. **24-hour completion cache** - Rebuild only once per day
+4. **zicompinit + zicdreplay** - Fast completion initialization
+5. **24-hour completion cache** - Rebuild at most once per day
 6. **Deferred .zshrc.local.post** - Non-critical customizations load after core integrations
 
-Zinit's deferred jobs run in the main shell process rather than in the background. Staggering them reduces ZLE pauses by avoiding a single large timer boundary. Deferred `atload` callbacks use `nocd` so tmux cannot observe a plugin directory as the pane's working directory while a callback runs.
+Deferred Zinit jobs run in the main shell process rather than in the background. Staggering them reduces ZLE pauses by avoiding a single large timer boundary. Deferred `atload` callbacks use `nocd` so tmux cannot observe a plugin directory as the pane working directory while a callback runs.
 
 ### Performance Features
 
-- **Profiling built-in:** `SC_PROFILE=1 zsh`
+- **Built-in profiling:** `SC_PROFILE=1 zsh`
 - **Non-interactive guard:** Skips plugins in non-interactive shells
-- **ttyctl -f:** Terminal stability protection
+- **Terminal stability:** `ttyctl -f`
 - **Directory stack caching:** Persistent across sessions
 
 ---
@@ -131,15 +131,15 @@ Zinit's deferred jobs run in the main shell process rather than in the backgroun
 
 ### Adding Aliases
 
-**Add to:** `aliases.zsh` (built-in) or `.zshrc.local.post` (personal)
+**Target file:** `includes/aliases.zsh` (built-in) or `~/.zshrc.local.post` (personal)
 
-**Philosophy:** Only add aliases you'll actually use. Use `zsh-you-should-use` plugin to remind you of existing aliases.
+**Philosophy:** Add only aliases you use. The `zsh-you-should-use` plugin reminds you of existing aliases.
 
 ### Adding Functions
 
 **For personal functions:**
 
-1. Create file in `~/.sc-zsh/functions/`
+1. Create a file in `~/.sc-zsh/functions/`
 2. Use namespace pattern: `namespace.function-name`
 3. Functions auto-load on shell start
 
@@ -157,11 +157,11 @@ git.root-cd() {
 
 1. Add to `functions/` directory
 2. Add completion to `completions/`
-3. Explicitly autoload in `.zshrc`
+3. Autoload in `.zshrc` (`autoload -Uz function-name`)
 
 ### Adding Plugins
 
-**Add to:** `plugins.zsh`
+**Target file:** `includes/plugins.zsh`
 
 **Pattern:**
 
@@ -182,23 +182,23 @@ zinit light author/plugin-name
 - zsh-you-should-use
 - OMZ snippets: git, eza, extract, gitignore, gnu-utils
 
-**Note:** Completions are primarily handled by Carapace (configured in `app_integrations.zsh`).
+**Note:** Carapace handles most completions (`includes/app_integrations.zsh`).
 
 ### Adding Completions
 
 **Completion sources:**
 
-- **Carapace** - Primary completion system (handles most tools automatically)
+- **Carapace** - Primary completion engine (handles most tools automatically)
 - **Built-in completions** - For autoload functions in `completions/` (`_ql`, `_rm.dstore`)
 - **User completions** - Custom completions in `~/.sc-zsh/completions/`
 
 **Strategy:**
 
-Most CLI tool completions are handled automatically by Carapace, which provides comprehensive support for hundreds of tools without needing individual completion files.
+Carapace completes most CLI tools automatically without separate completion files.
 
 **When to add manual completions:**
 
-- Custom autoload functions (like `ql`, `rm.dstore`)
+- Custom autoload functions (such as `ql`, `rm.dstore`)
 - Tools not supported by Carapace
 - Specialized custom commands
 
@@ -212,24 +212,24 @@ rm ~/.zcompdump && exec zsh
 
 **Decision matrix:**
 
-**Use Python (pyscripts) when:**
+**Use Python (pyscripts) for:**
 
 - Complex logic (>50 lines)
 - API interactions
 - Data processing
 - Interactive TUIs
-- Needs testing
-- Benefits from libraries
+- Code requiring unit tests
+- Scripts that benefit from libraries
 
-**Use Shell when:**
+**Use Shell for:**
 
 - Simple glue scripts (<20 lines)
-- Modifies shell state (cd, export)
+- State changes (cd, export)
 - One-off commands
-- Performance-critical
+- Performance-critical tasks
 
 **Python script location:** `~/silentcastle/projects/pyscripts/packages/`
-**Shell script location:** Simple scripts can go in `.zshrc.local.post`
+**Shell script location:** Put simple scripts in `~/.zshrc.local.post`
 
 ---
 
@@ -247,7 +247,7 @@ cd -<TAB>          # Shows history
 cd -2              # Jump to 2nd item
 ```
 
-Persistent across sessions, saved to `~/.cache/zsh/dirs`
+Saved to `~/.cache/zsh/dirs` across sessions.
 
 ### Completion Menu
 
@@ -259,7 +259,7 @@ git <TAB>          # Use arrows to select
 
 ### Terminfo Keybindings
 
-Portable keybindings that work across terminals:
+Standard keybindings that work across terminals:
 
 - Home/End - Beginning/end of line
 - Delete - Delete character
@@ -267,18 +267,18 @@ Portable keybindings that work across terminals:
 
 ### App Integrations
 
-- **Starship** - Modern prompt (loaded synchronously)
-- **fzf** - Fuzzy finder integration (wait"1")
-- **zoxide** - Smart directory jumper (wait"1")
-- **eza** - Modern ls replacement (via OMZ plugin)
-- **Carapace** - **Primary completion system** providing comprehensive completion support for hundreds of CLI tools (wait"1")
+- **Starship** - Prompt theme (loaded synchronously)
+- **fzf** - Fuzzy finder (wait"1")
+- **zoxide** - Directory jumper (wait"1")
+- **eza** - Directory listing with file and git metadata (via OMZ plugin)
+- **Carapace** - Multi-tool completion engine (wait"1")
 - **Homebrew** - Command-not-found handler (wait"3")
 
-**Completion Strategy:** Carapace handles most tool completions automatically, eliminating the need for individual completion files or multiple OMZ completion plugins.
+**Completion Strategy:** Carapace completes CLI tools directly, eliminating separate OMZ completion plugins and individual completion files.
 
 #### Starship AWS Token TTL
 
-`includes/app_integrations.zsh` caches AWS token time remaining in `SC_AWS_TOKEN_TTL` before each prompt. The cache refreshes at most once every 60 seconds by reading `x_security_token_expires` from `~/.aws/credentials`, avoiding a per-prompt Python or `uv` process.
+`includes/app_integrations.zsh` caches AWS token time remaining in `SC_AWS_TOKEN_TTL` before each prompt. The cache refreshes at most once every 60 seconds by reading `x_security_token_expires` from `~/.aws/credentials`. This avoids a per-prompt Python or `uv` process.
 
 Starship can display the cached value with:
 
@@ -303,19 +303,19 @@ SC_AWS_TOKEN_PROFILE=techops    # Default: techops
 
 ### From .myenv to sc-zsh
 
-**Status:** Optional - sc-zsh is complete without migration
+**Status:** Optional. sc-zsh is complete without migration.
 
 **If migrating, priority order:**
 
-1. **Git functions** (HIGH VALUE)
+1. **Git functions**
    - Location: `~/.sc-zsh/functions/git.env`
    - Pattern: `namespace.command` (e.g. `git.root-cd`)
 
-2. **SSH functions** (HIGH VALUE)
+2. **SSH functions**
    - Location: `~/.sc-zsh/functions/ssh.env`
    - Pattern: `namespace.command` (e.g. `ssh.add_key`)
 
-**Note:** `aws.env`, `chef.env`, `k.env`, and Terraform helpers (`tf`, `tf.plan.save`, `tfswitch` hook, …) live in `toolbox/shell/modules/` — do not re-add them here. See `toolbox/docs/terraform.md`.
+**Note:** `aws.env`, `chef.env`, `k.env`, and Terraform helpers (`tf`, `tf.plan.save`, `tfswitch` hook, etc.) live in `toolbox/shell/modules/`. Do not add them here. See `toolbox/docs/terraform.md`.
 
 **Not migrating:**
 
@@ -330,10 +330,10 @@ SC_AWS_TOKEN_PROFILE=techops    # Default: techops
 **Shell scripts:** Keep minimal, simple scripts
 **Python scripts:** Move to pyscripts for complex logic
 
-**Already using Python versions (don't migrate):**
+**Already in Python (do not migrate):**
 
 - ssm-connect (Python TUI version preferred)
-- cert-check (will convert to Python)
+- cert-check (planned for Python conversion)
 - PagerDuty tools (pyduty.py is newer)
 
 ---
@@ -342,16 +342,16 @@ SC_AWS_TOKEN_PROFILE=techops    # Default: techops
 
 ### Why not Oh-My-Zsh?
 
-**Decision:** Use Zinit + OMZ snippets
+**Decision:** Use Zinit with selected OMZ snippets
 
 **Rationale:**
 
 - Zinit is faster (turbo mode, parallel loading)
-- Already getting OMZ plugins via snippets
-- More control over loading
-- No framework overhead
+- Loads OMZ plugins via snippets without framework overhead
+- More control over loading order
+- No unused framework features
 
-**Result:** Best of both worlds
+**Result:** Fast shell startup with selective OMZ plugins
 
 ### Why autoload functions instead of plugins?
 
@@ -360,36 +360,35 @@ SC_AWS_TOKEN_PROFILE=techops    # Default: techops
 **Rationale:**
 
 - Lighter weight
-- Work with any plugin manager
-- Already lazy-loaded
-- Simpler to maintain
+- Works with any plugin manager
+- Lazy-loaded on first call
+- Simple to maintain
 
 **Exception:** Use plugins for third-party code
 
 ### Why Python for complex scripts?
 
-**Decision:** Python for >50 lines or complex logic
+**Decision:** Use Python for >50 lines or complex logic
 
 **Rationale:**
 
-- Better UX (Rich output, TUIs)
-- Testable (pytest)
+- Rich terminal output and TUIs
+- Unit tests with pytest
 - Type safety
-- Easier to extend
 - Modern libraries (Typer, Rich, Textual)
 
-**Trade-off:** Slightly slower startup (acceptable for infrequent use)
+**Trade-off:** Slightly slower startup than shell (acceptable for infrequent commands)
 
 ### Why separate user customizations?
 
-**Decision:** `~/.sc-zsh/` for user-specific code
+**Decision:** Use `~/.sc-zsh/` for user-specific code
 
 **Rationale:**
 
-- Clean separation (built-in vs personal)
-- Easy to backup/version separately
-- Portable repo without personal cruft
-- Can override location
+- Clean separation between core and personal code
+- Easy to backup or version separately
+- Portable repo without personal files
+- Location configurable via `SC_USER_DIR`
 
 ### Why Zinit for-syntax?
 
@@ -412,7 +411,7 @@ zinit wait"0" lucid light-mode for \
     plugin2
 ```
 
-**Result:** More concise, same performance
+**Result:** More concise declaration, same performance
 
 ### Why zicompinit instead of compinit?
 
@@ -421,10 +420,10 @@ zinit wait"0" lucid light-mode for \
 **Rationale:**
 
 - `zicompinit` + `zicdreplay` is 50-80% faster
-- Properly integrates with Zinit's completion system
+- Integrates directly with Zinit completion cache
 - Single point of initialization
 
-**Performance:** 0.9s → 0.17s startup time
+**Performance:** Startup time improved from 0.9s to ~0.17s
 
 ---
 
@@ -434,7 +433,7 @@ zinit wait"0" lucid light-mode for \
 
 1. Check fpath: `echo $fpath`
 2. Rebuild cache: `rm ~/.zcompdump && exec zsh`
-3. Verify file name: Must start with underscore (`_command-name`)
+3. Verify file name starts with underscore (`_command-name`)
 
 ### Slow startup
 
@@ -460,14 +459,14 @@ zinit wait"0" lucid light-mode for \
 
 ### 1. Keep It Simple
 
-- Don't add features you won't use
+- Do not add features you will not use
 - Prefer built-in Zsh features over plugins
 - Use aliases only for frequently-used commands
 
 ### 2. Modular Organization
 
 - One concern per file (aliases.zsh, keybindings.zsh, etc.)
-- Use functions for anything complex
+- Use functions for complex logic
 - Separate personal from shared config
 
 ### 3. Performance First
@@ -562,16 +561,16 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 - Staggered deferred Zinit jobs to prevent plugins, app integrations, and local customizations from blocking ZLE at the same one-second boundary
 - Prevented deferred `atload` callbacks from temporarily changing the shell directory while tmux may inspect the pane path
-- Removed toolbox's redundant completion initialization while preserving its deferred `compdef` registrations
+- Removed toolbox redundant completion initialization while preserving its deferred `compdef` registrations
 - Applied fzf-tab preview styles when the deferred plugin loads instead of checking for it before it is available
 
 ### 2026-06-08
 
-- Documented the Starship `SC_AWS_TOKEN_TTL` configuration and cache behavior
+- Documented Starship `SC_AWS_TOKEN_TTL` configuration and cache behavior
 - Removed stale Shell-GPT app integration documentation
-- Added a cached AWS token TTL prompt variable refreshed from Zsh instead of running the token helper on every Starship render
+- Added cached AWS token TTL prompt variable refreshed from Zsh instead of running the token helper on every Starship render
 - Changed feature flags in `includes/defaults.zsh` to preserve existing environment overrides
-- Loaded `zsh-history-substring-search` before `fast-syntax-highlighting` so history widgets exist before the highlighter binds ZLE widgets
+- Loaded `zsh-history-substring-search` before `fast-syntax-highlighting` so history widgets exist before highlighter widget binding
 - Filtered evalcache cache-miss notices from startup while preserving other stderr output
 - Swapped `zsh-users/zsh-syntax-highlighting` for `zdharma-continuum/fast-syntax-highlighting`
 - Added `mroth/evalcache` and routed generated app init output through `_evalcache` where available
@@ -584,22 +583,22 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 ### 2026-04-09
 
 - Added a short README setup section covering the `~/.zshenv` symlink and `.zshrc.local.{pre,post}` example-file bootstrap flow
-- Moved `.zshrc.local.pre` sourcing from `.zshrc` to `.zshenv` so API keys and exports are available to all shells, including non-interactive ones spawned by CLI agents
-- Prepended `/opt/homebrew/opt/ruby/bin` to `PATH` so Homebrew Ruby takes precedence over macOS Ruby 2.6 and Mason can install `rubocop`, which requires Ruby 2.7+
+- Moved `.zshrc.local.pre` sourcing from `.zshrc` to `.zshenv` so API keys and exports reach all shells, including non-interactive shells
+- Prepended `/opt/homebrew/opt/ruby/bin` to `PATH` for Homebrew Ruby precedence over macOS Ruby 2.6 (required by Mason for `rubocop`)
 - Removed `docs/todo/` (code-review-report.md, tasks.json, progress.txt) — all Jan 2026 code review tasks completed
 - Removed empty `lib/` directory
 
 ### 2026-05-22
 
-- Removed Terraform aliases from `includes/aliases.zsh` (now in `toolbox/shell/modules/terraform.sh`; MR helpers in `docs/terraform.md`)
-- `tfswitch` chpwd hook consolidated under toolbox `terraform` stem (`terraform.zsh` / `terraform.bash`; retired `tfswitch.zsh`)
+- Removed Terraform aliases from `includes/aliases.zsh` (now in `toolbox/shell/modules/terraform.sh`, MR helpers in `docs/terraform.md`)
+- Consolidated `tfswitch` chpwd hook under toolbox `terraform` stem (`terraform.zsh` / `terraform.bash`, retired `tfswitch.zsh`)
 
 ### 2026-04-02
 
 - Migrated `lib/aws-regions.zsh` and `lib/aws-profiles-cache.zsh` + `aws.caller_identity` to `toolbox/shell/modules/aws.sh`
 - Migrated zsh completions for `aws.env`, `chef.env`, `k.env` to `toolbox/shell/modules/{aws,chef,kube}.zsh`
 - Migrated zmx shell functions to `toolbox/shell/modules/zmx.sh` + `zmx.zsh`
-- Migrated `tfswitch` chpwd auto-switch hook to toolbox (`terraform.zsh`; later unified under `terraform` stem)
+- Migrated `tfswitch` chpwd auto-switch hook to toolbox (`terraform.zsh`, later unified under `terraform` stem)
 - Migrated `tp` tmux popup helper to `toolbox/shell/modules/tmux.sh` + `tmux.zsh`
 - Migrated cmux zsh completions to `toolbox/shell/modules/cmux.zsh`
 - Updated `aliases.zsh` and `defaults.zsh` to remove items migrated to toolbox
@@ -617,11 +616,11 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 ### 2026-03-18
 
 - Extracted `claude.monitor` alias to `toolbox/shell/modules/ai.sh`
-- Extracted network functions/aliases to `toolbox/shell/modules/net.sh`
+- Extracted network functions and aliases to `toolbox/shell/modules/net.sh`
 
 ### 2026-02-14
 
-- Refined `plugins.zsh`: improved zinit dependency guard with explicit error message if `plugins.zsh` wasn't sourced before `app_integrations.zsh` (ARCH-001)
+- Refined `plugins.zsh`: improved zinit dependency guard with explicit error message if `plugins.zsh` was not sourced before `app_integrations.zsh` (ARCH-001)
 
 ### 2026-01-24
 
@@ -639,7 +638,7 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 - Reduced OMZ plugins from 13 to 5 (kept: git, eza, extract, gitignore, gnu-utils)
 - Removed OMZ plugins now handled by Carapace: gh, chezmoi, k9s, knife, knife_ssh, systemadmin, tailscale, terraform
 - Updated documentation to emphasize Carapace-first completion approach
-- Simplified architecture by relying on Carapace's comprehensive tool support
+- Simplified architecture by relying on Carapace completion engine
 
 ### 2025-12-14
 

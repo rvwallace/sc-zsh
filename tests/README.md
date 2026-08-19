@@ -24,11 +24,11 @@ chmod +x tests/test-startup.zsh
 **Test 1: Startup Time Verification**
 - Measures shell startup time using `SC_PROFILE=1`
 - Passes if startup time < 0.3s
-- Current target: < 0.3s (actual: ~0.17s)
+- Target: < 0.3s (actual: ~0.17s)
 
 **Test 2: Startup Error Check**
-- Verifies no errors or warnings during startup
-- Excludes known informational messages (e.g., zsh-you-should-use)
+- Verifies no errors or warnings occur during startup
+- Ignores known informational messages (such as zsh-you-should-use)
 
 **Test 3: Function Loading Verification**
 - Checks that core autoload functions are available
@@ -37,10 +37,10 @@ chmod +x tests/test-startup.zsh
 **Test 4: PATH Verification**
 - Verifies PATH includes expected directories
 - Checks for Homebrew paths
-- Checks for user-specific paths (if directories exist)
+- Checks for user-specific paths (when directories exist)
 
 **Test 5: ZDOTDIR Verification**
-- Confirms ZDOTDIR is set to the correct project directory
+- Confirms ZDOTDIR points to the correct project directory
 - Required for proper sc-zsh initialization
 
 ## Test Output
@@ -94,7 +94,7 @@ fi
 
 ## CI Integration
 
-These tests can be integrated into GitHub Actions or other CI systems:
+These tests integrate into GitHub Actions or other CI systems:
 
 ```yaml
 # Example GitHub Actions workflow
@@ -122,11 +122,11 @@ jobs:
 3. Profile startup: `SC_PROFILE=1 zsh -i -c 'exit'`
 
 **Permission errors:**
-- Ensure test scripts are executable: `chmod +x tests/*.zsh`
+- Make sure test scripts are executable: `chmod +x tests/*.zsh`
 
 **PATH test failures:**
 - Verify expected directories exist on your system
-- Tests skip directories that don't exist
+- Tests skip directories that do not exist
 
 ## Future Enhancements
 

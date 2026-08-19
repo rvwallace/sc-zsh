@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to AI assistants when working with code in this repository.
+This file guides AI assistants when working with code in this repository.
 
 ## Repository Overview
 
@@ -78,7 +78,7 @@ sc-zsh is a modular, performance-optimized Zsh configuration system. Current sta
 - zsh-you-should-use, evalcache
 - OMZ snippets: eza, extract, gitignore, gnu-utils
 
-**Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which provides comprehensive completion support across multiple shells and tools.
+**Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which supports completions across multiple shells and tools.
 
 **Eza plugin configuration:**
 - dirs-first: yes
@@ -111,13 +111,13 @@ Loads integrations for external tools with deferred loading (except Starship). A
 - **Starship** (wait: none) - Prompt theme, loaded synchronously for first prompt
 - **Fastfetch** (wait"1") - System info display on startup (optional, default: disabled)
 - **FZF** (wait"1") - Fuzzy finder with auto-detection of fd/rg/ag for default command
-- **Carapace** (wait"1") - **Primary completion handler** supporting multiple shells and tools (gen, zsh, fish, bash, inshellisense). Replaces individual OMZ completion plugins for a unified, comprehensive completion system.
+- **Carapace** (wait"1") - **Primary completion handler** supporting multiple shells and tools (gen, zsh, fish, bash, inshellisense). Replaces individual OMZ completion plugins.
 - **Zoxide** (wait"1") - Smart directory jumper, replaces `cd` command
 - **Homebrew** (wait"1") - Command-not-found handler
 
-All tools except Starship use Zinit's deferred loading (`wait"1"`) for faster startup.
+All tools except Starship use deferred Zinit loading (`wait"1"`) for faster startup.
 
-**Completion Strategy:** This configuration uses Carapace as the primary completion system instead of managing individual completion files or OMZ completion plugins. This simplifies the setup while providing broad tool coverage.
+**Completion Strategy:** This configuration uses Carapace as the primary completion system instead of managing individual files or OMZ plugins. This simplifies the setup while providing broad tool coverage.
 
 ### Configuration Variables
 
@@ -221,7 +221,7 @@ alias shortcut='long command'
 - Development (Git, Python, Terraform, Kubernetes, Homebrew)
 - MacOS Specific (top, dns, wifi, finder utilities)
 
-**Philosophy:** Only add aliases you'll use. `zsh-you-should-use` plugin reminds you of existing aliases.
+**Philosophy:** Add only aliases you use. `zsh-you-should-use` plugin reminds you of existing aliases.
 
 ### Adding Completions
 
@@ -232,13 +232,13 @@ alias shortcut='long command'
 
 **Completion strategy:**
 
-Most completions are handled automatically by Carapace (configured in `app_integrations.zsh`). Carapace provides comprehensive completion support for hundreds of CLI tools without needing individual completion files.
+Most completions are handled automatically by Carapace (configured in `app_integrations.zsh`). Carapace supports completions for many CLI tools without individual completion files.
 
 For custom autoload functions, create completion files in:
 - `completions/_function_name` (built-in)
 - `~/.sc-zsh/completions/_command_name` (user)
 
-**Rebuild cache if completions aren't working:**
+**Rebuild cache if completions do not work:**
 
 ```bash
 rm ~/.zcompdump && exec zsh
@@ -263,7 +263,7 @@ zsh -f  # No rc files
 
 - **Main config:** `~/silentcastle/projects/sc-zsh/`
 - **User config:** `~/.sc-zsh/`
-- **Documentation:** `docs/README.md` (comprehensive guide)
+- **Documentation:** `docs/README.md` (complete guide)
 - **Zinit:** `~/.local/share/zinit/zinit.git`
 - **Completion cache:** `~/.zcompdump`
 - **Directory stack:** `~/.cache/zsh/dirs`
@@ -328,7 +328,7 @@ complete -p command-name
 
 **File:** `docs/README.md` — "Change Log" section at the bottom
 
-**Rule:** Every change to this repo must get a changelog entry. Add it under a `### YYYY-MM-DD` heading (create the heading if it doesn't exist for today). Use the file's modification date — not today's date — when backdating entries for changes that were already made.
+**Rule:** Every change to this repo must get a changelog entry. Add it under a `### YYYY-MM-DD` heading (create the heading if it does not exist for today). Use the file modification date rather than the current date when backdating entries for changes already made.
 
 **What to log:**
 - Files added, removed, or significantly changed
@@ -439,7 +439,7 @@ esac
 
 ### Plugin Loading Order
 
-1. OMZ git (no wait - provides aliases)
+1. OMZ git (no wait - sets aliases)
 2. Core plugins (wait"0" - syntax, completion)
 3. Utilities (wait"1" - nice-to-haves)
 4. OMZ snippets (wait"1")
@@ -508,10 +508,10 @@ function_name() {
 
 ## Notes
 
-- **Completions use zicompinit:** Don't call `compinit` manually (handled by Zinit)
+- **Completions use zicompinit:** Do not call `compinit` manually (handled by Zinit)
 - **Directory stack:** Auto-saves on `cd`, navigate with `cd -<TAB>`
 - **Terminfo keys:** Portable across terminals (not hardcoded escape sequences)
 - **User separation:** Personal code in `~/.sc-zsh/`, not in repo
 - **Customization points:** `.zshrc.local.pre` (sourced in `.zshenv` — available to all shells) and `.zshrc.local.post` (late, interactive only)
 
-See `docs/README.md` for comprehensive documentation including architecture decisions, migration guides, and best practices.
+See `docs/README.md` for complete documentation including architecture decisions, migration guides, and best practices.

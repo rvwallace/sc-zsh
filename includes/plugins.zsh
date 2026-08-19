@@ -93,13 +93,7 @@ zinit light MichaelAquilina/zsh-you-should-use
 mkdir -p "$ZSH_CACHE_DIR/completions"
 
 zinit wait"3" lucid for \
-    OMZP::eza \
     OMZP::extract \
     OMZP::gitignore \
-    OMZP::gnu-utils 
-# Eza plugin configuration
-zstyle ':omz:plugins:eza' 'dirs-first' yes
-zstyle ':omz:plugins:eza' 'icons' yes
-zstyle ':omz:plugins:eza' 'git-status' yes
-zstyle ':omz:plugins:eza' 'header' yes
-zstyle ':omz:plugins:eza' 'size-prefix' binary
+    OMZP::gnu-utils
+

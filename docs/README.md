@@ -270,7 +270,7 @@ Standard keybindings that work across terminals:
 - **Starship** - Prompt theme (loaded synchronously)
 - **fzf** - Fuzzy finder (wait"1")
 - **zoxide** - Directory jumper (wait"1")
-- **eza** - Directory listing with file and git metadata (via OMZ plugin)
+- **eza** - Directory listing with file and git metadata (via `includes/aliases.zsh`)
 - **Carapace** - Multi-tool completion engine (wait"1")
 - **Homebrew** - Command-not-found handler (wait"3")
 
@@ -555,6 +555,7 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ### 2026-08-19
 
+- Removed redundant `OMZP::eza` snippet from `includes/plugins.zsh` to prevent deferred loading from overwriting custom `eza` aliases
 - Added `--git-repos` flag to `eza` alias in `includes/aliases.zsh` to show repository status on directory listings
 
 ### 2026-08-11

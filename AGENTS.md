@@ -76,16 +76,9 @@ sc-zsh is a modular, performance-optimized Zsh configuration system. Current sta
 - fast-syntax-highlighting, zsh-autosuggestions, zsh-completions
 - zsh-256color, fzf-tab, zsh-history-substring-search
 - zsh-you-should-use, evalcache
-- OMZ snippets: eza, extract, gitignore, gnu-utils
+- OMZ snippets: extract, gitignore, gnu-utils
 
-**Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which supports completions across multiple shells and tools.
-
-**Eza plugin configuration:**
-- dirs-first: yes
-- icons: yes
-- git-status: yes
-- header: yes
-- size-prefix: binary
+**Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which supports completions across multiple shells and tools. Custom `eza` aliases (`ls`, `ll`, `la`, `lt`) are managed in `includes/aliases.zsh`.
 
 ### Autoload Functions
 

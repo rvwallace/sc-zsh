@@ -554,6 +554,10 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ## Change Log
 
+### 2026-08-19
+
+- Added `--git-repos` flag to `eza` alias in `includes/aliases.zsh` to show repository status on directory listings
+
 ### 2026-08-11
 
 - Staggered deferred Zinit jobs to prevent plugins, app integrations, and local customizations from blocking ZLE at the same one-second boundary

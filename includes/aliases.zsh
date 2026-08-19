@@ -21,7 +21,7 @@ alias find.big='find . -type f -size +100M'            # Large files
 
 # Eza (if installed)
 if command -v eza &> /dev/null; then
-    alias ls='eza --icons --git --group-directories-first --hyperlink'
+    alias ls='eza --icons --git --git-repos --group-directories-first --hyperlink'
     alias lt='ls --tree'
 fi
 

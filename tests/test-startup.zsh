@@ -11,6 +11,9 @@ NC='\033[0m' # No Color
 TESTS_PASSED=0
 TESTS_FAILED=0
 
+# Disable job control in test runner to prevent terminal suspension (SIGTTIN/SIGTTOU)
+unsetopt MONITOR 2>/dev/null || true
+
 # Test helper functions
 pass() {
     echo "${GREEN}✓${NC} $1"
@@ -27,7 +30,7 @@ echo "====================================\n"
 
 # Test 1: Verify startup time < 0.3s using SC_PROFILE=1
 echo "Test 1: Startup time verification"
-STARTUP_OUTPUT=$(SC_PROFILE=1 zsh -i -c 'exit' 2>&1)
+STARTUP_OUTPUT=$(SC_PROFILE=1 zsh -i +m -c 'exit' </dev/null 2>&1)
 # Calculate total from SOURCED lines
 STARTUP_TIME=$(echo "$STARTUP_OUTPUT" | grep "^SOURCED" | awk '{sum += $NF} END {printf "%.4f", sum}' | sed 's/s//')
 if [[ -n "$STARTUP_TIME" ]] && (( $(echo "$STARTUP_TIME > 0" | bc -l) )); then
@@ -42,7 +45,7 @@ fi
 
 # Test 2: Check for error messages during startup
 echo "\nTest 2: Startup error check"
-STARTUP_ERRORS=$(zsh -i -c 'exit' 2>&1 | grep -iE 'error|fail|warn' | grep -v 'zsh-you-should-use' || true)
+STARTUP_ERRORS=$(zsh -i +m -c 'exit' </dev/null 2>&1 | grep -iE 'error|fail|warn' | grep -v 'zsh-you-should-use' || true)
 if [[ -z "$STARTUP_ERRORS" ]]; then
     pass "No errors during startup"
 else
@@ -51,7 +54,7 @@ fi
 
 # Test 3: Verify all expected functions are loaded
 echo "\nTest 3: Function loading verification"
-FUNCTIONS_CHECK=$(zsh -i -c 'which aws.env chef.env k.env' 2>&1)
+FUNCTIONS_CHECK=$(zsh -i +m -c 'which aws.env chef.env k.env' </dev/null 2>&1)
 if echo "$FUNCTIONS_CHECK" | grep -q "aws.env" && \
    echo "$FUNCTIONS_CHECK" | grep -q "chef.env" && \
    echo "$FUNCTIONS_CHECK" | grep -q "k.env"; then
@@ -62,7 +65,7 @@ fi
 
 # Test 4: Verify PATH includes expected directories
 echo "\nTest 4: PATH verification"
-PATH_CHECK=$(zsh -i -c 'echo $PATH' 2>&1)
+PATH_CHECK=$(zsh -i +m -c 'echo $PATH' </dev/null 2>&1)
 MISSING_PATHS=()
 
 # Check for Homebrew path (at least one should exist)
@@ -82,7 +85,7 @@ fi
 
 # Test 5: Verify ZDOTDIR is set correctly
 echo "\nTest 5: ZDOTDIR verification"
-ZDOTDIR_CHECK=$(zsh -c 'echo $ZDOTDIR' 2>&1)
+ZDOTDIR_CHECK=$(zsh +m -c 'echo $ZDOTDIR' </dev/null 2>&1)
 EXPECTED_ZDOTDIR="${0:A:h:h}"  # Derive from script location (tests/../)
 if [[ "$ZDOTDIR_CHECK" == "$EXPECTED_ZDOTDIR" ]]; then
     pass "ZDOTDIR set correctly: $ZDOTDIR_CHECK"

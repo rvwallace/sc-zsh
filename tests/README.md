@@ -84,7 +84,7 @@ To add a new test:
 Example:
 ```zsh
 echo "\nTest 6: New test description"
-RESULT=$(zsh -i -c 'some command' 2>&1)
+RESULT=$(zsh -i +m -c 'some command' </dev/null 2>&1)
 if [[ "$RESULT" == "expected" ]]; then
     pass "New test passed"
 else
@@ -119,7 +119,7 @@ jobs:
 **Test failures after modifications:**
 1. Check syntax: `zsh -n <modified-file>`
 2. Test sourcing: `zsh -c 'source <modified-file>'`
-3. Profile startup: `SC_PROFILE=1 zsh -i -c 'exit'`
+3. Profile startup: `SC_PROFILE=1 zsh -i +m -c 'exit' </dev/null`
 
 **Permission errors:**
 - Make sure test scripts are executable: `chmod +x tests/*.zsh`

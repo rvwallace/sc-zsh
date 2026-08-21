@@ -6,7 +6,9 @@ fi
 
 # Terminal Stability
 # Freeze terminal state to prevent program crashes from corrupting the terminal
-ttyctl -f
+if [[ -t 0 && -o interactive ]]; then
+    ttyctl -f 2>/dev/null || true
+fi
 
 # Source a file if it exists
 function _source() {

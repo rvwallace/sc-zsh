@@ -557,6 +557,7 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 - Removed git flags (`--git`, `--git-repos`) from default `ls` alias in `includes/aliases.zsh` to prevent latency in directories with many git repositories
 - Added `lg` alias (`ll --git --git-repos`) in `includes/aliases.zsh` for on-demand git status listings
+- Fixed terminal suspension (`SIGTTIN`/`SIGTTOU`) by guarding `ttyctl -f` in `.zshrc` to interactive terminals and disabling job control (`+m </dev/null`) during subshell integration tests
 
 ### 2026-08-19
 

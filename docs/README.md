@@ -553,6 +553,11 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 
 ## Change Log
 
+### 2026-08-20
+
+- Removed git flags (`--git`, `--git-repos`) from default `ls` alias in `includes/aliases.zsh` to prevent latency in directories with many git repositories
+- Added `lg` alias (`ll --git --git-repos`) in `includes/aliases.zsh` for on-demand git status listings
+
 ### 2026-08-19
 
 - Removed redundant `OMZP::eza` snippet from `includes/plugins.zsh` to prevent deferred loading from overwriting custom `eza` aliases

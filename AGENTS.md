@@ -78,7 +78,7 @@ sc-zsh is a modular, performance-optimized Zsh configuration system. Current sta
 - zsh-you-should-use, evalcache
 - OMZ snippets: extract, gitignore, gnu-utils
 
-**Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which supports completions across multiple shells and tools. Custom `eza` aliases (`ls`, `ll`, `la`, `lt`) are managed in `includes/aliases.zsh`.
+**Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which supports completions across multiple shells and tools. Custom `eza` aliases (`ls`, `ll`, `la`, `lt`, `lg`) are managed in `includes/aliases.zsh`.
 
 ### Autoload Functions
 

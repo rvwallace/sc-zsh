@@ -44,9 +44,6 @@ fi
 # 3. Core Plugins
 # -----------------
 
-# OMZ git plugin (loaded early, no wait - provides aliases/functions)
-zinit snippet OMZ::plugins/git/git.plugin.zsh
-
 # History substring search widgets must exist before the syntax highlighter
 # binds ZLE widgets, otherwise the highlighter reports unhandled widget names.
 zinit ice lucid
@@ -86,10 +83,6 @@ zinit ice wait"1" lucid nocd has'fzf' atload'
     zstyle ":fzf-tab:complete:__zoxide_z:*" fzf-preview "ls \$realpath"
 '
 zinit light Aloxaf/fzf-tab
-
-# Alias reminder - tells you when you type a command you have an alias for
-zinit ice wait"3" lucid
-zinit light MichaelAquilina/zsh-you-should-use
 
 # -----------------
 # 5. OMZ Snippets

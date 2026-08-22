@@ -131,7 +131,7 @@ Deferred Zinit jobs run in the main shell process rather than in the background.
 
 **Target file:** `includes/aliases.zsh` (built-in) or `~/.zshrc.local.post` (personal)
 
-**Rule:** Add only aliases that you use. The `zsh-you-should-use` plugin reminds you of existing aliases.
+**Rule:** Add only aliases that you use.
 
 ### Adding Functions
 
@@ -177,8 +177,7 @@ zinit light author/plugin-name
 - evalcache
 - fzf-tab
 - zsh-history-substring-search
-- zsh-you-should-use
-- OMZ snippets: git, eza, extract, gitignore, gnu-utils
+- OMZ snippets: extract, gitignore, gnu-utils
 
 **Note:** Carapace handles most completions (`includes/app_integrations.zsh`).
 

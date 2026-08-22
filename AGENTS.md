@@ -61,9 +61,9 @@ sc-zsh is a modular, performance-optimized Zsh configuration system. Current sta
 
 **Loading Strategy:**
 
-- **No wait:** Critical (OMZ git plugin)
+- **No wait:** Core synchronous (history-substring-search, evalcache)
 - **wait"0":** Core (syntax-highlighting, autosuggestions, completions)
-- **wait"1":** Utilities (fzf-tab, history-search, you-should-use)
+- **wait"1"/"3":** Utilities & snippets (fzf-tab, OMZ snippets)
 
 **Optimization techniques:**
 
@@ -76,7 +76,7 @@ sc-zsh is a modular, performance-optimized Zsh configuration system. Current sta
 
 - fast-syntax-highlighting, zsh-autosuggestions, zsh-completions
 - zsh-256color, fzf-tab, zsh-history-substring-search
-- zsh-you-should-use, evalcache
+- evalcache
 - OMZ snippets: extract, gitignore, gnu-utils
 
 **Note:** Completions are primarily handled by Carapace (loaded in `app_integrations.zsh`), which supports completions across multiple shells and tools. Custom `eza` aliases (`ls`, `ll`, `la`, `lt`, `lg`) are managed in `includes/aliases.zsh`.
@@ -215,7 +215,7 @@ alias shortcut='long command'
 - Development (Git, Python, Terraform, Kubernetes, Homebrew)
 - MacOS Specific (top, dns, wifi, finder utilities)
 
-**Philosophy:** Add only aliases you use. `zsh-you-should-use` plugin reminds you of existing aliases.
+**Philosophy:** Add only aliases you use.
 
 ### Adding Completions
 
@@ -435,10 +435,9 @@ esac
 
 ### Plugin Loading Order
 
-1. OMZ git (no wait - sets aliases)
-2. Core plugins (wait"0" - syntax, completion)
-3. Utilities (wait"1" - nice-to-haves)
-4. OMZ snippets (wait"1")
+1. Core synchronous (history substring search, evalcache)
+2. Core plugins (wait"0" - syntax, autosuggestions, completion)
+3. Utilities & OMZ snippets (wait"1", wait"3")
 
 ### Error Handling
 

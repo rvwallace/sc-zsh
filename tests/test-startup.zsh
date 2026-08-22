@@ -45,7 +45,7 @@ fi
 
 # Test 2: Check for error messages during startup
 echo "\nTest 2: Startup error check"
-STARTUP_ERRORS=$(zsh -i +m -c 'exit' </dev/null 2>&1 | grep -iE 'error|fail|warn' | grep -v 'zsh-you-should-use' || true)
+STARTUP_ERRORS=$(zsh -i +m -c 'exit' </dev/null 2>&1 | grep -iE 'error|fail|warn' || true)
 if [[ -z "$STARTUP_ERRORS" ]]; then
     pass "No errors during startup"
 else

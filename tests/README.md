@@ -28,7 +28,6 @@ chmod +x tests/test-startup.zsh
 
 **Test 2: Startup Error Check**
 - Verifies no errors or warnings occur during startup
-- Ignores known informational messages (such as zsh-you-should-use)
 
 **Test 3: Function Loading Verification**
 - Checks that core autoload functions are available

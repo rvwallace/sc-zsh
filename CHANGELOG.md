@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### 2026-08-22
 
+- Removed `MichaelAquilina/zsh-you-should-use` plugin from `includes/plugins.zsh` and cleaned up startup error filter in tests
+- Removed OMZ git plugin snippet (`OMZ::plugins/git/git.plugin.zsh`) from `includes/plugins.zsh`
 - Migrated `cmux` and `tmux` ZLE keybindings from `includes/keybindings.zsh` to `toolbox/shell/modules/{cmux,tmux}.zsh`
 - Migrated AWS token TTL prompt caching from `includes/app_integrations.zsh` to `toolbox/shell/modules/aws.zsh`
 - Migrated Ansible `uv` aliases from `includes/aliases.zsh` to `toolbox/shell/modules/ansible.sh`

@@ -44,7 +44,8 @@ sc-zsh is a modular, performance-optimized Zsh configuration system. Current sta
 - `functions/` - Built-in autoload functions
 - `lib/` - Removed (content migrated to toolbox)
 - `completions/` - Built-in completions
-- `docs/` - Documentation
+- `README.md` - Documentation
+- `CHANGELOG.md` - Change log
 
 **User-specific** (`~/.sc-zsh/` - NOT in git):
 
@@ -256,7 +257,8 @@ zsh -f  # No rc files
 
 - **Main config:** `~/silentcastle/projects/sc-zsh/`
 - **User config:** `~/.sc-zsh/`
-- **Documentation:** `docs/README.md` (complete guide)
+- **Documentation:** `README.md` (complete guide)
+- **Changelog:** `CHANGELOG.md`
 - **Zinit:** `~/.local/share/zinit/zinit.git`
 - **Completion cache:** `~/.cache/zsh/zcompdump`
 - **Directory stack:** `~/.cache/zsh/dirs`
@@ -319,7 +321,7 @@ complete -p command-name
 
 ## Changelog
 
-**File:** `docs/README.md` — "Change Log" section at the bottom
+**File:** `CHANGELOG.md`
 
 **Rule:** Every change to this repo must get a changelog entry. Add it under a `### YYYY-MM-DD` heading (create the heading if it does not exist for today). Use the file modification date rather than the current date when backdating entries for changes already made.
 
@@ -346,7 +348,8 @@ complete -p command-name
 
 - `.zshenv`, `.zshrc`
 - `includes/` - All sourced config files
-- `functions/`, `completions/`, `docs/`, `tests/`
+- `functions/`, `completions/`, `tests/`
+- `README.md`, `CHANGELOG.md`
 
 **Not tracked (.gitignore):**
 
@@ -507,4 +510,4 @@ function_name() {
 - **User separation:** Personal code in `~/.sc-zsh/`, not in repo
 - **Customization points:** `.zshrc.local.pre` (sourced in `.zshenv` — available to all shells) and `.zshrc.local.post` (late, interactive only)
 
-See `docs/README.md` for complete documentation including architecture decisions, migration guides, and best practices.
+See `README.md` for complete documentation including architecture decisions, migration guides, and best practices.

@@ -43,6 +43,10 @@ chmod +x tests/test-startup.zsh
 - Confirms ZDOTDIR points to the correct project directory
 - Required for proper sc-zsh initialization
 
+**Test 6: ZSH_CACHE_DIR Verification**
+- Confirms ZSH_CACHE_DIR defaults to XDG cache directory (`~/.cache/zsh`)
+- Required for completion dump and runtime caches
+
 ## Test Output
 
 Tests use color-coded output:

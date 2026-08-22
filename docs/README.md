@@ -205,7 +205,7 @@ Carapace completes most CLI tools automatically without separate completion file
 **To rebuild completion cache:**
 
 ```bash
-rm ~/.zcompdump && exec zsh
+rm -f ~/.cache/zsh/zcompdump && exec zsh
 ```
 
 ### Adding Scripts
@@ -432,7 +432,7 @@ zinit wait"0" lucid light-mode for \
 ### Completions not working
 
 1. Check fpath: `echo $fpath`
-2. Rebuild cache: `rm ~/.zcompdump && exec zsh`
+2. Rebuild cache: `rm -f ~/.cache/zsh/zcompdump && exec zsh`
 3. Verify file name starts with underscore (`_command-name`)
 
 ### Slow startup
@@ -524,7 +524,7 @@ cd -<TAB>
 echo $fpath
 
 # Rebuild completions
-rm ~/.zcompdump && exec zsh
+rm -f ~/.cache/zsh/zcompdump && exec zsh
 ```
 
 ### File Locations
@@ -533,13 +533,14 @@ rm ~/.zcompdump && exec zsh
 - User config: `~/.sc-zsh/`
 - Personal overrides: `~/.zshrc.local.pre` (env vars, sourced in `.zshenv` for all shells) or `~/.zshrc.local.post` (interactive late)
 - Python scripts: `~/silentcastle/projects/pyscripts/`
-- Completions cache: `~/.zcompdump`
+- Completions cache: `~/.cache/zsh/zcompdump`
 - Directory stack cache: `~/.cache/zsh/dirs`
 
 ### Configuration Variables
 
 ```zsh
 SC_PROFILE=1                    # Enable profiling
+ZSH_CACHE_DIR                   # Cache directory (~/.cache/zsh)
 SC_USER_DIR                     # User customizations location
 SC_USER_FUNCTIONS_DIR           # User functions directory
 SC_USER_COMPLETIONS_DIR         # User completions directory
@@ -552,6 +553,11 @@ ENABLE_FASTFETCH                # Enable fastfetch on startup
 ---
 
 ## Change Log
+
+### 2026-08-22
+
+- Moved `.zcompdump` completion cache from `$ZDOTDIR/.zcompdump` to `~/.cache/zsh/zcompdump` via `zicompinit -d`
+- Defined `ZSH_CACHE_DIR` (`${XDG_CACHE_HOME:-$HOME/.cache}/zsh`) in `includes/defaults.zsh`
 
 ### 2026-08-20
 

@@ -147,7 +147,7 @@ SC_PROFILE=1  # Enable startup profiling
 **Current optimizations:**
 
 - Zinit turbo mode with deferred loading
-- 24-hour completion cache (`.zcompdump`)
+- 24-hour completion cache (`~/.cache/zsh/zcompdump`)
 - Deferred `.zshrc.local.post` (Zinit wait"1")
 - Directory stack persistence (`~/.cache/zsh/dirs`)
 - Terminal stability (`ttyctl -f`)
@@ -234,7 +234,7 @@ For custom autoload functions, create completion files in:
 **Rebuild cache if completions do not work:**
 
 ```bash
-rm ~/.zcompdump && exec zsh
+rm -f ~/.cache/zsh/zcompdump && exec zsh
 ```
 
 ### Testing Changes
@@ -258,7 +258,7 @@ zsh -f  # No rc files
 - **User config:** `~/.sc-zsh/`
 - **Documentation:** `docs/README.md` (complete guide)
 - **Zinit:** `~/.local/share/zinit/zinit.git`
-- **Completion cache:** `~/.zcompdump`
+- **Completion cache:** `~/.cache/zsh/zcompdump`
 - **Directory stack:** `~/.cache/zsh/dirs`
 - **History:** `~/.zsh_history`
 
@@ -272,7 +272,7 @@ SC_PROFILE=1 zsh
 exec zsh
 
 # Rebuild completions
-rm ~/.zcompdump && exec zsh
+rm -f ~/.cache/zsh/zcompdump && exec zsh
 
 # List loaded plugins
 zinit list
@@ -297,7 +297,7 @@ complete -p command-name
 
 1. Check file starts with `_` (`_command-name`)
 2. Verify directory in fpath: `echo $fpath`
-3. Rebuild: `rm ~/.zcompdump && exec zsh`
+3. Rebuild: `rm -f ~/.cache/zsh/zcompdump && exec zsh`
 
 **Slow startup:**
 

@@ -93,6 +93,16 @@ else
     fail "ZDOTDIR incorrect. Expected: $EXPECTED_ZDOTDIR, Got: $ZDOTDIR_CHECK"
 fi
 
+# Test 6: Verify ZSH_CACHE_DIR is set correctly
+echo "\nTest 6: ZSH_CACHE_DIR verification"
+CACHE_DIR_CHECK=$(zsh -i +m -c 'echo $ZSH_CACHE_DIR' </dev/null 2>&1)
+EXPECTED_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+if [[ "$CACHE_DIR_CHECK" == "$EXPECTED_CACHE_DIR" ]]; then
+    pass "ZSH_CACHE_DIR set correctly: $CACHE_DIR_CHECK"
+else
+    fail "ZSH_CACHE_DIR incorrect. Expected: $EXPECTED_CACHE_DIR, Got: $CACHE_DIR_CHECK"
+fi
+
 # Summary
 echo "\n===================================="
 echo "Test Results"

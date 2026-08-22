@@ -28,6 +28,10 @@ fi
 
 _source "$ZINIT_HOME/zinit.zsh"
 
+# Direct completion dump to user cache directory
+typeset -gA ZINIT
+ZINIT[ZCOMPDUMP_PATH]="$ZSH_CACHE_DIR/zcompdump"
+
 # -----------------
 # 2. Guard Clause
 # -----------------

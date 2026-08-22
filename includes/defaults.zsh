@@ -3,6 +3,10 @@
 # ----------------------
 # Internal configuration flags for the zsh setup.
 
+# Cache directory (XDG compliant with macOS fallback)
+export ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+[[ ! -d "$ZSH_CACHE_DIR" ]] && mkdir -p "$ZSH_CACHE_DIR"
+
 # User customization directory (can be overridden in .zshrc.local.pre)
 SC_USER_DIR="${SC_USER_DIR:-$HOME/.sc-zsh}"
 SC_USER_FUNCTIONS_DIR="${SC_USER_FUNCTIONS_DIR:-${SC_USER_DIR}/functions}"

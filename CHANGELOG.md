@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### 2026-08-22
 
+- Migrated `cmux` and `tmux` ZLE keybindings from `includes/keybindings.zsh` to `toolbox/shell/modules/{cmux,tmux}.zsh`
+- Migrated AWS token TTL prompt caching from `includes/app_integrations.zsh` to `toolbox/shell/modules/aws.zsh`
+- Migrated Ansible `uv` aliases from `includes/aliases.zsh` to `toolbox/shell/modules/ansible.sh`
+- Removed dead `scripts/completions` fpath check and hardcoded bun completions from `.zshrc`
+- Removed redundant completion directory creation from `includes/plugins.zsh`
+- Updated integration test suite in `tests/test-startup.zsh` to verify `ql` and `rm.dstore`
 - Moved documentation from `docs/README.md` to root `README.md` and extracted Change Log to `CHANGELOG.md`
 - Updated documentation to reference [toolbox](https://github.com/rvwallace/toolbox) and the `.zshrc.local.post` integration
 - Moved `.zcompdump` completion cache from `$ZDOTDIR/.zcompdump` to `~/.cache/zsh/zcompdump` via `zicompinit -d`

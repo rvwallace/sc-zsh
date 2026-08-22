@@ -276,7 +276,7 @@ Standard keybindings work consistently across terminal emulators:
 
 #### Starship AWS Token TTL
 
-`includes/app_integrations.zsh` caches the remaining AWS token time in `SC_AWS_TOKEN_TTL` before each prompt. The cache refreshes at most once every 60 seconds by reading `x_security_token_expires` from `~/.aws/credentials`. This avoids running a Python or `uv` process on every prompt.
+The `toolbox/shell/modules/aws.zsh` module caches the remaining AWS token time in `SC_AWS_TOKEN_TTL` before each prompt. The cache refreshes at most once every 60 seconds by reading `x_security_token_expires` from `~/.aws/credentials`. This avoids running a Python or `uv` process on every prompt.
 
 Starship can show the cached value with this configuration:
 

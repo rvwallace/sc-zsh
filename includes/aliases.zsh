@@ -3,7 +3,6 @@
 # ------------------------------------------------------------------------------
 # Core & File System
 # ------------------------------------------------------------------------------
-# [[ "${ENABLE_GNU_SED:-false}" == "true" ]] && alias sed='gsed' # Should be handled by gnu-utils plugin
 alias rm='rm -i'                                       # Interactive removal
 alias grep='grep --color=auto'                         # Colored grep output
 alias less='less -FSRXc'                               # Enhanced less defaults
@@ -28,7 +27,6 @@ fi
 
 # Archive & Compression
 # ---------------------
-# [[ "${ENABLE_GNU_TAR:-false}" == "true" ]] && alias tar='gtar' # Should be handled by gnu-utils plugin
 alias tar.gz='tar -czvf'                               # Create tar.gz archive
 alias tar.xz='tar -cJvf'                               # Create tar.xz archive
 alias tar.ungz='tar -xzvf'                             # Extract tar.gz archive
@@ -76,17 +74,6 @@ alias venv='python3 -m venv'
 alias activate='source ./.venv/bin/activate'
 alias ipy='python3 -m IPython'
 alias uv.exp='uv export --format requirements-txt --no-hashes --output-file requirements.txt --quiet'
-
-# Ansible
-# Run via uv to ensure isolated, reproducible environments and no messy global deps
-alias ansible='uv run --with ansible-core ansible'
-alias ansible-playbook='uv run --with ansible-core ansible-playbook'
-alias ansible-vault='uv run --with ansible-core ansible-vault'
-alias ansible-galaxy='uv run --with ansible-core ansible-galaxy'
-alias ansible-lint='uv run --with ansible-lint ansible-lint'
-
-# Terraform: toolbox/shell/modules/terraform.{sh,zsh,bash} (tf, tf.plan.save, tfswitch hook, …)
-# Source toolbox init.sh from ~/.zshrc.local.post — see docs/terraform.md in toolbox repo.
 
 # Homebrew
 alias brew.bundle="brew bundle dump --global --force"

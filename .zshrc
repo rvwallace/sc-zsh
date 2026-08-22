@@ -34,11 +34,6 @@ _source "$ZDOTDIR/includes/defaults.zsh"
 # Completions and Functions
 fpath=("$ZDOTDIR/functions" "$ZDOTDIR/completions" $fpath)
 
-# Add script completions to fpath (if directory exists)
-if [[ -d "$ZDOTDIR/scripts/completions" ]]; then
-    fpath=("$ZDOTDIR/scripts/completions" $fpath)
-fi
-
 # Built-in Functions
 if [[ -d "$ZDOTDIR/functions" ]]; then
     # Autoload all built-in functions
@@ -86,7 +81,3 @@ fi
 if [[ "$SC_PROFILE" == "1" ]]; then
     zprof
 fi
-
-
-# bun completions
-[ -s "/Users/robertwallace/.bun/_bun" ] && source "/Users/robertwallace/.bun/_bun"

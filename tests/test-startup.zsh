@@ -54,11 +54,10 @@ fi
 
 # Test 3: Verify all expected functions are loaded
 echo "\nTest 3: Function loading verification"
-FUNCTIONS_CHECK=$(zsh -i +m -c 'which aws.env chef.env k.env' </dev/null 2>&1)
-if echo "$FUNCTIONS_CHECK" | grep -q "aws.env" && \
-   echo "$FUNCTIONS_CHECK" | grep -q "chef.env" && \
-   echo "$FUNCTIONS_CHECK" | grep -q "k.env"; then
-    pass "All expected functions loaded (aws.env, chef.env, k.env)"
+FUNCTIONS_CHECK=$(zsh -i +m -c 'which ql rm.dstore' </dev/null 2>&1)
+if echo "$FUNCTIONS_CHECK" | grep -q "ql" && \
+   echo "$FUNCTIONS_CHECK" | grep -q "rm.dstore"; then
+    pass "All expected functions loaded (ql, rm.dstore)"
 else
     fail "Not all expected functions loaded"
 fi

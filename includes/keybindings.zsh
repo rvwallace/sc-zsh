@@ -67,65 +67,6 @@ zle -N sudo-command-line
 bindkey -M emacs '\es' sudo-command-line
 bindkey -M viins '\es' sudo-command-line
 
-# Cmux Integrations
-if [[ -n "$CMUX_WORKSPACE_ID" ]]; then
-
-    # Open current pane scrollback in $EDITOR
-    # Bind: ^Xv (Ctrl-X, v)
-    _cmux_pane_to_editor() {
-        local tmpfile
-        tmpfile=$(mktemp /tmp/cmux-pane-XXXXXX.txt)
-        cmux capture-pane --scrollback | sed 's/[[:space:]]*$//' | sed '/./,$!d' > "$tmpfile"
-        zle -I
-        $EDITOR "$tmpfile"
-        rm -f "$tmpfile"
-    }
-    zle -N _cmux_pane_to_editor
-    bindkey -M emacs "^Xv" _cmux_pane_to_editor
-    bindkey -M viins "^Xv" _cmux_pane_to_editor
-
-    # Flash current pane border (visual "where am I" marker)
-    # Bind: ^Xf (Ctrl-X, f)
-    _cmux_flash() {
-        cmux trigger-flash &>/dev/null
-        zle reset-prompt
-    }
-    zle -N _cmux_flash
-    bindkey -M emacs "^Xf" _cmux_flash
-    bindkey -M viins "^Xf" _cmux_flash
-
-fi
-
-# Tmux Popup Toggle
-# Toggles wrapping the command to run in a tmux display-popup
-# Note: For multi-statement commands (cmd1; cmd2), the toggle wraps everything.
-#       For standalone tp function, quote multi-commands: tp 'cmd1; cmd2'
-# Bind: ^Xp (Ctrl-X, p)
-if (( $+commands[tmux] )); then
-    _tmux_popup_toggle() {
-        if [[ -z $BUFFER ]]; then
-            zle up-history
-        fi
-
-        local popup_prefix="tmux display-popup -- "
-
-        if [[ $BUFFER == ${popup_prefix}* ]]; then
-            # Remove popup wrapper
-            BUFFER="${BUFFER#${popup_prefix}}"
-        elif [[ $BUFFER == "tmux display-popup"* ]]; then
-            # Handle variations (e.g., user added flags manually)
-            zle -M "Complex popup command - edit manually"
-        else
-            # Add popup wrapper
-            BUFFER="${popup_prefix}${BUFFER}"
-        fi
-        zle redisplay
-    }
-    zle -N _tmux_popup_toggle
-    bindkey -M emacs "^Xp" _tmux_popup_toggle
-    bindkey -M viins "^Xp" _tmux_popup_toggle
-fi
-
 # -----------------
 # Utility Widgets
 # -----------------

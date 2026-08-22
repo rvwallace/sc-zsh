@@ -16,7 +16,5 @@ SC_USER_COMPLETIONS_DIR="${SC_USER_COMPLETIONS_DIR:-${SC_USER_DIR}/completions}"
 # Feature flags (Used in app_integrations.zsh and user config files)
 # shellcheck disable=SC2034
 ENABLE_STARSHIP="${ENABLE_STARSHIP:-true}"
-# ENABLE_GNU_SED=true
-# ENABLE_GNU_TAR=true
 # shellcheck disable=SC2034
 ENABLE_FASTFETCH="${ENABLE_FASTFETCH:-false}"

@@ -94,8 +94,6 @@ zinit light MichaelAquilina/zsh-you-should-use
 # -----------------
 # 5. OMZ Snippets
 # -----------------
-mkdir -p "$ZSH_CACHE_DIR/completions"
-
 zinit wait"3" lucid for \
     OMZP::extract \
     OMZP::gitignore \

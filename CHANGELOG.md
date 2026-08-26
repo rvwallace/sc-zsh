@@ -10,6 +10,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Removed stale `ENABLE_GNU_SED`/`ENABLE_GNU_TAR` entries from the `README.md` Configuration Variables reference (unused since the OMZ `gnu-utils` plugin took over; not defined anywhere in code)
 - Removed inert untracked `.zprofile` (contained only a commented-out `rbenv init` line; not part of version control)
+- Removed 21 unused aliases from `includes/aliases.zsh` (`batcat`, `cat.img`, `find.big`, `tar.gz`, `tar.xz`, `tar.ungz`, `tar.unxz`, `lsof.listen`, `lsof.ports`, `term.reset`, `term.sane`, `timestamp`, `datestamp`, `now`, `nowdate`, `venv`, `top.mem` (both branches), `wifi.password.current`, `wifi.password.find`, `finder.files.show`, `finder.files.hide`) after checking 22 months of `.zsh_history` showed zero usage; kept `truncate` and `uv.exp` at user request despite zero recorded use
+- Removed now-empty "Archive & Compression" and "Time & Date" alias section headers and the dead Linux `else` branch in the MacOS Specific alias block
 
 ### 2026-08-22
 

@@ -6,6 +6,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 2026-08-25
+
+- Removed stale `ENABLE_GNU_SED`/`ENABLE_GNU_TAR` entries from the `README.md` Configuration Variables reference (unused since the OMZ `gnu-utils` plugin took over; not defined anywhere in code)
+- Removed inert untracked `.zprofile` (contained only a commented-out `rbenv init` line; not part of version control)
+
 ### 2026-08-22
 
 - Removed `MichaelAquilina/zsh-you-should-use` plugin from `includes/plugins.zsh` and cleaned up startup error filter in tests

@@ -523,8 +523,6 @@ SC_USER_DIR                     # User customizations location
 SC_USER_FUNCTIONS_DIR           # User functions directory
 SC_USER_COMPLETIONS_DIR         # User completions directory
 ENABLE_STARSHIP                 # Enable Starship prompt
-ENABLE_GNU_SED                  # Use GNU sed on macOS
-ENABLE_GNU_TAR                  # Use GNU tar on macOS
 ENABLE_FASTFETCH                # Enable fastfetch on startup
 ```
 

@@ -427,7 +427,7 @@ zinit wait"0" lucid light-mode for \
 
 ### Plugin errors
 
-1. Check Zinit status: `zinit list`
+1. Check Zinit status: `zinit plugins`
 2. Update plugins: `zinit update`
 3. Check loading order (dependencies must load first).
 
@@ -486,8 +486,9 @@ zinit wait"0" lucid light-mode for \
 # Profile startup
 SC_PROFILE=1 zsh
 
-# List loaded plugins
-zinit list
+# List loaded plugins / snippets
+zinit plugins
+zinit snippets
 
 # Update plugins
 zinit update

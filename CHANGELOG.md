@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 2026-08-28
+
+- Updated documentation in [README.md](file:///home/rwallace/silentcastle/projects/sc-zsh/README.md) and [AGENTS.md](file:///home/rwallace/silentcastle/projects/sc-zsh/AGENTS.md) to replace obsolete `zinit list` subcommand with `zinit plugins` and `zinit snippets`
+
+### 2026-08-27
+
+- Removed `--hyperlink` flag from `eza` alias in `includes/aliases.zsh` due to an upstream parser issue in `ansi-to-tui` (used by `tmux-snaglord`), where OSC 8 hyperlink sequences terminated by `ST` (`\x1b\`) cause subsequent filenames in directory listings to be swallowed and omitted from TUI rendering
+
 ### 2026-08-25
 
 - Removed stale `ENABLE_GNU_SED`/`ENABLE_GNU_TAR` entries from the `README.md` Configuration Variables reference (unused since the OMZ `gnu-utils` plugin took over; not defined anywhere in code)

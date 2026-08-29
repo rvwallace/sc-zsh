@@ -276,8 +276,9 @@ exec zsh
 # Rebuild completions
 rm -f ~/.cache/zsh/zcompdump && exec zsh
 
-# List loaded plugins
-zinit list
+# List loaded plugins / snippets
+zinit plugins
+zinit snippets
 
 # Update all plugins
 zinit update
@@ -317,7 +318,7 @@ complete -p command-name
 
 1. Check loading order (dependencies first)
 2. Update: `zinit update`
-3. Check: `zinit list`
+3. Check: `zinit plugins`
 
 ## Changelog
 

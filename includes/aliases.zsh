@@ -17,7 +17,7 @@ alias ppath='echo -e ${PATH//:/\\n}'                   # PATH entries
 
 # Eza (if installed)
 if command -v eza &> /dev/null; then
-    alias ls='eza --icons --group-directories-first --hyperlink'
+    alias ls='eza --icons --group-directories-first'
     alias lt='ls --tree'
     alias lg='ll --git --git-repos'
 fi

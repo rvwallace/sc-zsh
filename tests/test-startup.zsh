@@ -75,6 +75,7 @@ fi
 # Check for user paths (if they exist on system)
 [[ -d "$HOME/.local/bin" ]] && ! echo "$PATH_CHECK" | grep -q "$HOME/.local/bin" && MISSING_PATHS+=("$HOME/.local/bin")
 [[ -d "$HOME/go/bin" ]] && ! echo "$PATH_CHECK" | grep -q "$HOME/go/bin" && MISSING_PATHS+=("$HOME/go/bin")
+[[ -d "$HOME/.opencode/bin" ]] && ! echo "$PATH_CHECK" | grep -q "$HOME/.opencode/bin" && MISSING_PATHS+=("$HOME/.opencode/bin")
 
 if [[ ${#MISSING_PATHS[@]} -eq 0 ]]; then
     pass "PATH includes expected directories"

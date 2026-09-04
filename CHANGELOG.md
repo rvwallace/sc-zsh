@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 2026-09-03
+
+- Added OpenCode binary path (`~/.opencode/bin`) to `includes/paths.zsh` via `_path_prepend`
+
 ### 2026-08-28
 
 - Updated documentation in [README.md](file:///home/rwallace/silentcastle/projects/sc-zsh/README.md) and [AGENTS.md](file:///home/rwallace/silentcastle/projects/sc-zsh/AGENTS.md) to replace obsolete `zinit list` subcommand with `zinit plugins` and `zinit snippets`

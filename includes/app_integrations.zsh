@@ -73,6 +73,10 @@ fi
 
 # Carapace (Completion Bridge) - Load after prompt (wait"1")
 if (( $+commands[carapace] )); then
+    # Normalize an inherited Carapace bin entry before deferred initialization.
+    if (( $+functions[_path_prepend] )); then
+        _path_prepend "$HOME/Library/Application Support/carapace/bin"
+    fi
     zinit ice wait"1" lucid nocd atload'
         export CARAPACE_BRIDGES="gen,zsh,fish,bash,inshellisense"
         if (( ${+functions[_evalcache]} )); then

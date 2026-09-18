@@ -39,6 +39,14 @@ elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 fi
 
+# `brew shellenv` always prepends its bin directories, including when they were
+# inherited from the parent process. Normalize them through the PATH helpers so
+# each directory is present once while preserving Homebrew precedence.
+if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
+    _path_prepend "$HOMEBREW_PREFIX/sbin"
+    _path_prepend "$HOMEBREW_PREFIX/bin"
+fi
+
 # User specific paths (Prepended last to ensure highest priority)
 _path_prepend "$HOME/.cargo/bin"
 _path_prepend "$HOME/.local/bin"

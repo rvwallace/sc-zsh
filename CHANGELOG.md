@@ -6,6 +6,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 2026-09-17
+
+- Normalized Homebrew `bin` and `sbin` paths after `brew shellenv` to prevent inherited PATH entries from being duplicated
+- Normalized the Carapace bin path before deferred completion initialization when `_path_prepend` is available
+
 ### 2026-09-03
 
 - Added OpenCode binary path (`~/.opencode/bin`) to `includes/paths.zsh` via `_path_prepend`

@@ -6,6 +6,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 2026-10-13
+
+- Added `VERSION` starting at `0.1.0`, documented the release/tag convention, and displayed configuration version and Git revision in doctor
+
+### 2026-10-12
+
+- Added repeatable `setup.sh` and read-only `doctor.sh` with bootstrap backups, private templates, custom path support, and plugin installation checks
+- Preserved completion signatures and plugin indexes on unchanged installs, fetched pinned plugins with shallow history, and cleaned incomplete checkouts after failures
+- Added isolated setup/doctor tests and removed obsolete Zinit and post-loading comments
+- Added the repository-local `sc-zsh-plugins` skill and AGENTS/README routing for pinned plugin additions, upgrades, load order, and startup checks
+- Switched Python startup tests to `uv run --script` with inline dependency metadata and documented uv-based execution for assistant helpers
+- Replaced deferred Zinit loading with direct plugin loading and an explicit installer for pinned plugin revisions
+- Loaded completions, FZF, Carapace, Zoxide, personal configuration, suggestions, and highlighting before the first prompt
+- Preserved repository and personal completion definitions when Carapace registers its command list, and compiled completion dumps for reuse
+- Replaced evalcache with atomic integration caches that detect executable and initialization-setting changes without warm-start version commands
+- Replaced `brew shellenv` startup processes with native Homebrew environment setup and OMZ GNU utilities with built-in GNU command mappings
+- Preserved native `cd`, added Zoxide `z`/`zi`, bound Ctrl-O to command-line editing, and preserved inherited tmux terminal capabilities
+- Replaced nested profiling-total tests with PTY readiness tests and added cache failure, concurrency, and GNU mapping coverage
+- Updated setup, migration, rollback, cache, plugin maintenance, and agent documentation for the new startup contract
+
 ### 2026-09-17
 
 - Normalized Homebrew `bin` and `sbin` paths after `brew shellenv` to prevent inherited PATH entries from being duplicated

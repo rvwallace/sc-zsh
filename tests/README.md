@@ -1,141 +1,49 @@
-# sc-zsh Integration Tests
+# sc-zsh Tests
 
-This directory contains integration tests for the sc-zsh configuration system.
+Requirements: Zsh 5.9 or later, uv, and installed sc-zsh plugins. Install plugins with `zsh scripts/plugins.zsh install` first.
 
-## Running Tests
+The startup wrapper uses `uv run --script`. Inline metadata declares Python 3.9 or later and no third-party dependencies.
 
-### Run all tests
+## Functional tests
 
-```bash
-zsh tests/test-startup.zsh
-```
-
-Or make it executable and run directly:
-
-```bash
-chmod +x tests/test-startup.zsh
-./tests/test-startup.zsh
-```
-
-## Test Coverage
-
-### test-startup.zsh
-
-**Test 1: Startup Time Verification**
-- Measures shell startup time using `SC_PROFILE=1`
-- Passes if startup time < 0.3s
-- Target: < 0.3s (actual: ~0.17s)
-
-**Test 2: Startup Error Check**
-- Verifies no errors or warnings occur during startup
-
-**Test 3: Function Loading Verification**
-- Checks that core autoload functions are available
-- Expected functions: `ql`, `rm.dstore`
-
-**Test 4: PATH Verification**
-- Verifies PATH includes expected directories
-- Checks for Homebrew paths
-- Checks for user-specific paths (when directories exist)
-
-**Test 5: ZDOTDIR Verification**
-- Confirms ZDOTDIR points to the correct project directory
-- Required for proper sc-zsh initialization
-
-**Test 6: ZSH_CACHE_DIR Verification**
-- Confirms ZSH_CACHE_DIR defaults to XDG cache directory (`~/.cache/zsh`)
-- Required for completion dump and runtime caches
-
-## Test Output
-
-Tests use color-coded output:
-- ✓ Green: Test passed
-- ✗ Red: Test failed
-
-Example output:
-```
-Running sc-zsh integration tests...
-====================================
-
-Test 1: Startup time verification
-✓ Startup time: 0.17s (< 0.3s target)
-
-Test 2: Startup error check
-✓ No errors during startup
-
-...
-
-====================================
-Test Results
-====================================
-Passed: 5
-Failed: 0
-Total:  5
-
-All tests passed!
-```
-
-## Adding New Tests
-
-To add a new test:
-
-1. Follow the existing test pattern in `test-startup.zsh`
-2. Use the `pass()` and `fail()` helper functions
-3. Update this README with test description
-4. Increment test counters appropriately
-
-Example:
 ```zsh
-echo "\nTest 6: New test description"
-RESULT=$(zsh -i +m -c 'some command' </dev/null 2>&1)
-if [[ "$RESULT" == "expected" ]]; then
-    pass "New test passed"
-else
-    fail "New test failed: $RESULT"
-fi
+zsh tests/test-startup.zsh
+zsh tests/test-cache.zsh
+uv run --script tests/test-setup.py
+zsh tests/test-tmux.zsh
+zsh tests/test-tmux.zsh --personal
 ```
 
-## CI Integration
+The startup test opens a real pseudo-terminal with a temporary home. It tests feature availability at the first prompt, completion widgets, highlighting, Ctrl-O editing, FZF `**<Tab>`, native `cd`, Zoxide, history settings, PATH initialization, and dummy SSH arguments. Noninteractive shells must not load interactive completion.
 
-These tests integrate into GitHub Actions or other CI systems:
+The cache test uses mock commands in a temporary directory. It tests cache reuse, executable replacement, argument and setting changes, failed and malformed output, concurrent generation, and read-only fallback. It also tests GNU mappings and built-in preservation after `rehash`.
 
-```yaml
-# Example GitHub Actions workflow
-name: Tests
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run tests
-        run: zsh tests/test-startup.zsh
+The tests do not delete personal history, caches, or plugin installations.
+
+Setup tests use local Git repositories, temporary homes, and paths with spaces. They check fresh/offline setup, repeat runs, bootstrap backups, private file modes, custom directories, read-only doctor behavior, shallow pinned fetches, dirty plugins, partial failures, and temporary checkout cleanup. No GitHub download is needed.
+
+The tmux test creates its own temporary server. It checks prompt rendering, terminal capabilities, feature readiness, and Ctrl-O. Personal mode also checks Toolbox. It does not change an existing tmux server.
+
+## Benchmarks
+
+```zsh
+zsh tests/test-startup.zsh --benchmark --samples 10
+zsh tests/test-startup.zsh --benchmark --personal --samples 10
+zsh tests/test-startup.zsh --benchmark --personal --system-rc --samples 10
 ```
 
-## Requirements
+The benchmark reports median and p95 elapsed times for the first rendered prompt, feature confirmation, and a subsequent prompt. It tests login and non-login shells. Feature confirmation includes the test command and its next prompt, so it is an upper bound on readiness.
 
-- Zsh 5.0+
-- bc (for floating-point comparison in startup time test)
+Default measurements skip system-wide rc files to isolate the repository. Add `--system-rc` to include `/etc/zshrc` and login setup. The tmux test includes those files.
 
-## Troubleshooting
+The benchmark reports the first run separately, then collects warm samples. The first non-login run in a temporary home includes cold-cache work. Login runs share that cache. Personal runs use existing home caches and can refresh them. Do not publish environment-variable contents or terminal output from private configuration.
 
-**Test failures after modifications:**
-1. Check syntax: `zsh -n <modified-file>`
-2. Test sourcing: `zsh -c 'source <modified-file>'`
-3. Profile startup: `SC_PROFILE=1 zsh -i +m -c 'exit' </dev/null`
+An optional `--baseline /absolute/path/to/old-checkout` compares an older configuration with the current one. Supply an `XDG_DATA_HOME` containing installed legacy plugins when testing a Zinit baseline with a temporary home. Never permit baseline startup to install dependencies as part of a benchmark.
 
-**Permission errors:**
-- Make sure test scripts are executable: `chmod +x tests/*.zsh`
+Profile source and function costs separately:
 
-**PATH test failures:**
-- Verify expected directories exist on your system
-- Tests skip directories that do not exist
+```zsh
+SC_PROFILE=1 zsh
+```
 
-## Future Enhancements
-
-Potential additions:
-- Plugin loading tests
-- Completion system tests
-- Performance benchmarks
-- Integration with external tools (fzf, zoxide, etc.)
-- Cross-platform tests (macOS, Linux)
+Source timings include nested calls. Do not add them together to calculate elapsed startup time. The PTY benchmark measures process elapsed time instead.

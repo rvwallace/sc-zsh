@@ -1,0 +1,3 @@
+interface:
+  display_name: "sc-zsh Plugins"
+  short_description: "Add and upgrade pinned plugins in sc-zsh"

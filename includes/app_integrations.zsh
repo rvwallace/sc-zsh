@@ -1,65 +1,11 @@
 # shellcheck shell=zsh
-# Application Integrations
-# ------------------------
-# This file loads integrations for external tools (Starship, FZF, etc.).
-# It is guarded to strictly run only in interactive shells or when profiling.
-# Most integrations are deferred using zinit's wait mechanism for faster startup.
-# Starship loads synchronously to ensure it's ready for the first prompt.
+[[ -o interactive ]] || return 0
 
-if [[ ! -o interactive && "${SC_PROFILE:-}" != 1 ]]; then
-    return
+if (( $+commands[starship] )) && [[ "$ENABLE_STARSHIP" == true ]]; then
+    export STARSHIP_LOG=error
+    _sc_evalcache starship init zsh
 fi
-
-# Ensure zinit is available (it should be loaded from plugins.zsh before this file)
-if ! command -v zinit &> /dev/null; then
-    echo "[SilentCastle zsh] ERROR: zinit not loaded. Ensure plugins.zsh is sourced before app_integrations.zsh" >&2
-    echo "  Expected source order: plugins.zsh → app_integrations.zsh" >&2
-    return 1 2>/dev/null || exit 1
-fi
-
-_sc_evalcache() {
-    (( ${+functions[_evalcache]} )) || return 1
-
-    _evalcache "$@" 2> >(
-        command grep -v '^evalcache: .* initialization not cached, caching output of:' >&2
-    )
-}
-
-# -----------------
-# 1. Prompt (Starship)
-# -----------------
-# Load synchronously - must be ready before first prompt renders
-if (( $+commands[starship] )) && [[ "${ENABLE_STARSHIP:-true}" == "true" ]]; then
-    export STARSHIP_LOG="error" # suppress warnings
-    if (( ${+functions[_evalcache]} )); then
-        _sc_evalcache starship init zsh
-    else
-        eval "$(starship init zsh)"
-    fi
-fi
-
-# -----------------
-# 2. System Info
-# -----------------
-# Load after optional integrations (wait"4") - fastfetch only runs once on startup
-if (( $+commands[fastfetch] )) && [[ "${ENABLE_FASTFETCH:-false}" == "true" ]]; then
-    zinit ice wait"4" lucid nocd atload'fastfetch'
-    zinit light zdharma-continuum/null
-fi
-
-# -----------------
-# 3. Navigation & Completion
-# -----------------
-# FZF - Load after prompt (wait"1")
 if (( $+commands[fzf] )); then
-    zinit ice wait"1" lucid nocd atload'
-        if (( ${+functions[_evalcache]} )); then
-            _sc_evalcache fzf --zsh
-        else
-            eval "$(fzf --zsh)"
-        fi
-    '
-    zinit light zdharma-continuum/null
     if [[ -z "$FZF_DEFAULT_COMMAND" ]]; then
         if (( $+commands[fd] )); then
             export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
@@ -69,47 +15,23 @@ if (( $+commands[fzf] )); then
             export FZF_DEFAULT_COMMAND='ag -l --hidden -g "" --ignore .git'
         fi
     fi
+    # FZF restores ZLE options that Zsh cannot change without a terminal.
+    [[ -t 0 ]] && _sc_evalcache fzf --zsh
 fi
-
-# Carapace (Completion Bridge) - Load after prompt (wait"1")
 if (( $+commands[carapace] )); then
-    # Normalize an inherited Carapace bin entry before deferred initialization.
-    if (( $+functions[_path_prepend] )); then
-        _path_prepend "$HOME/Library/Application Support/carapace/bin"
-    fi
-    zinit ice wait"1" lucid nocd atload'
-        export CARAPACE_BRIDGES="gen,zsh,fish,bash,inshellisense"
-        if (( ${+functions[_evalcache]} )); then
-            _sc_evalcache carapace _carapace zsh
-        else
-            source <(carapace _carapace zsh)
-        fi
-    '
-    zinit light zdharma-continuum/null
+    _path_prepend "$HOME/Library/Application Support/carapace/bin"
+    export CARAPACE_BRIDGES='gen,zsh,fish,bash,inshellisense'
+    _sc_evalcache carapace _carapace zsh
 fi
-
-# Zoxide (Smart Directory Jumper) - Load after prompt (wait"1")
-if (( $+commands[zoxide] )); then
-    zinit ice wait"1" lucid nocd atload'
-        if (( ${+functions[_evalcache]} )); then
-            _sc_evalcache zoxide init --cmd cd zsh
-        else
-            eval "$(zoxide init --cmd cd zsh)"
-        fi
-    '
-    zinit light zdharma-continuum/null
+local command_name completion
+if (( $+functions[compdef] && ${#_SC_CUSTOM_COMPLETIONS} )); then
+    for command_name completion in "${(@kv)_SC_CUSTOM_COMPLETIONS}"; do
+        compdef "$completion" "$command_name"
+    done
 fi
-
-# -----------------
-# 4. Utilities
-# -----------------
-# Homebrew command not found handler - Load after other utilities (wait"3")
-if (( $+commands[brew] )); then
-    zinit ice wait"3" lucid nocd atload'
-        HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
-        if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
-            source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER"
-        fi
-    '
-    zinit light zdharma-continuum/null
+(( $+commands[zoxide] )) && _sc_evalcache zoxide init zsh
+if [[ -n "$HOMEBREW_REPOSITORY" ]]; then
+    local handler="$HOMEBREW_REPOSITORY/Library/Homebrew/command-not-found/handler.sh"
+    [[ -r "$handler" ]] && source "$handler"
 fi
+return 0

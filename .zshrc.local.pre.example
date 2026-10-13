@@ -1,7 +1,6 @@
-# WARNING: This file is designed to be sourced by sc-zsh (~/silentcastle/projects/sc-zsh).
-# Do not source this file directly; it depends on helper functions defined by sc-zsh.
+# This file loads from .zshenv in all shells, before defaults and PATH helpers.
 #
-# This file is sourced *after* defaults.zsh but *before* the main .zshrc file and other configuration files.
+# This file is sourced before defaults.zsh and the main .zshrc file.
 # Use it for local, personal Zsh configurations that should not be committed to the repository.
 # This is an ideal place to set default values or override existing ones that might be set later.
 # Examples include:

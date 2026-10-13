@@ -1,7 +1,7 @@
 # WARNING: This file is designed to be sourced by sc-zsh (~/silentcastle/projects/sc-zsh).
 # Do not source this file directly; it depends on helper functions defined by sc-zsh.
 #
-# This file is sourced *after* the main .zshrc file.
+# This file loads late in .zshrc, before autosuggestions and highlighting.
 # Use it for local, personal Zsh configurations that should not be committed to the repository.
 # Examples include:
 # - Overriding or extending PATH variables.
@@ -21,11 +21,11 @@ fi
 
 # Mise (polyglot runtime manager)
 if command -v mise &>/dev/null; then
-    eval "$(mise activate zsh)"
+    _sc_evalcache mise activate zsh
 fi
 
 # Bun (JavaScript runtime)
 if [[ -d "$HOME/.bun/bin" ]]; then
     export BUN_INSTALL="$HOME/.bun"
-    export PATH="$BUN_INSTALL/bin:$PATH"
+    _path_prepend "$BUN_INSTALL/bin"
 fi

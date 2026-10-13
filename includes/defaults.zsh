@@ -5,7 +5,9 @@
 
 # Cache directory (XDG compliant with macOS fallback)
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-[[ ! -d "$ZSH_CACHE_DIR" ]] && mkdir -p "$ZSH_CACHE_DIR"
+[[ -d "$ZSH_CACHE_DIR" ]] || mkdir -p "$ZSH_CACHE_DIR" 2>/dev/null
+SC_PLUGIN_DIR="${SC_PLUGIN_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/sc-zsh/plugins}"
+SC_COMPLETION_MAX_AGE="${SC_COMPLETION_MAX_AGE:-86400}"
 
 # User customization directory (can be overridden in .zshrc.local.pre)
 SC_USER_DIR="${SC_USER_DIR:-$HOME/.sc-zsh}"

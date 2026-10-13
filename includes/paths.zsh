@@ -26,26 +26,38 @@ function _path_append() {
     path=($path "$1")
 }
 
-# Load Homebrew (Explicitly check standard locations to avoid circular dependency)
-# SECURITY NOTE: This uses eval with Homebrew output, which is a known trust boundary.
-# Homebrew is considered trusted software installed by the system administrator.
-# In high-security environments, verify Homebrew binary integrity before sourcing.
-# The eval executes `brew shellenv zsh` output to set HOMEBREW_* environment variables and PATH.
-if [[ -x /opt/homebrew/bin/brew ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-elif [[ -x /usr/local/bin/brew ]]; then
-    eval "$(/usr/local/bin/brew shellenv zsh)"
-elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
-fi
-
-# `brew shellenv` always prepends its bin directories, including when they were
-# inherited from the parent process. Normalize them through the PATH helpers so
-# each directory is present once while preserving Homebrew precedence.
-if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
-    _path_prepend "$HOMEBREW_PREFIX/sbin"
-    _path_prepend "$HOMEBREW_PREFIX/bin"
-fi
+# Use the same standard locations as Homebrew, without launching brew or Bash.
+_sc_homebrew_env() {
+    local brew_file
+    if [[ -x /opt/homebrew/bin/brew ]]; then
+        brew_file=/opt/homebrew/bin/brew
+    elif [[ -x /usr/local/bin/brew ]]; then
+        brew_file=/usr/local/bin/brew
+    elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+        brew_file=/home/linuxbrew/.linuxbrew/bin/brew
+    fi
+    if [[ -n "$brew_file" ]]; then
+        export HOMEBREW_PREFIX="${brew_file:h:h}"
+        export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+        export HOMEBREW_REPOSITORY="${brew_file:A:h:h}"
+        [[ -d /usr/local/Homebrew && "$HOMEBREW_PREFIX" == /usr/local ]] && export HOMEBREW_REPOSITORY=/usr/local/Homebrew
+        local brew_completions="$HOMEBREW_PREFIX/share/zsh/site-functions"
+        [[ -d "$brew_completions" && ${fpath[(Ie)$brew_completions]} == 0 ]] && fpath=("$brew_completions" $fpath)
+        export FPATH
+        if [[ -n "$MANPATH" ]]; then
+            while [[ "$MANPATH" == :* ]]; do MANPATH="${MANPATH#:}"; done
+            while [[ "$MANPATH" == *: ]]; do MANPATH="${MANPATH%:}"; done
+            export MANPATH=":$MANPATH"
+        fi
+        local info="$HOMEBREW_PREFIX/share/info"
+        local -a info_paths=("${(@s/:/)INFOPATH}")
+        info_paths=("${(@)info_paths:#$info}")
+        export INFOPATH="$info:${(j/:/)info_paths}"
+        _path_prepend "$HOMEBREW_PREFIX/sbin"
+        _path_prepend "$HOMEBREW_PREFIX/bin"
+    fi
+}
+_sc_homebrew_env
 
 # User specific paths (Prepended last to ensure highest priority)
 _path_prepend "$HOME/.cargo/bin"

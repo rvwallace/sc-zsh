@@ -58,7 +58,7 @@ alias brew.bundle="brew bundle dump --global --force"
 # ------------------------------------------------------------------------------
 # MacOS Specific
 # ------------------------------------------------------------------------------
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
     alias top='top -R -F -s 5'                             # Enhanced display (macOS)
     alias dns='scutil --dns'
     alias ip.info='scutil --nwi'

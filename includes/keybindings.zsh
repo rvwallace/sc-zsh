@@ -31,8 +31,13 @@ key[Backspace]="${terminfo[kbs]}"
 [[ -n "${key[Insert]}" ]] && bindkey -- "${key[Insert]}" overwrite-mode
 [[ -n "${key[Delete]}" ]] && bindkey -- "${key[Delete]}" delete-char
 [[ -n "${key[Backspace]}" ]] && bindkey -- "${key[Backspace]}" backward-delete-char
-[[ -n "${key[Up]}" ]] && bindkey -- "${key[Up]}" history-substring-search-up
-[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" history-substring-search-down
+local history_up=up-line-or-history history_down=down-line-or-history
+if (( $+widgets[history-substring-search-up] )); then
+    history_up=history-substring-search-up
+    history_down=history-substring-search-down
+fi
+[[ -n "${key[Up]}" ]] && bindkey -- "${key[Up]}" "$history_up"
+[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" "$history_down"
 [[ -n "${key[PageUp]}" ]] && bindkey -- "${key[PageUp]}" beginning-of-buffer-or-history
 [[ -n "${key[PageDown]}" ]] && bindkey -- "${key[PageDown]}" end-of-buffer-or-history
 
@@ -43,9 +48,11 @@ key[Backspace]="${terminfo[kbs]}"
 # Editor Integration (Edit command line in EDITOR)
 # only wire up keybinds and zle widgets when the line editor is around (or when profiling)
 autoload -Uz edit-command-line; zle -N edit-command-line
-# Bind to both emacs and viins to ensure functionality regardless of zinit-loaded vi-mode status
+# Keep editor bindings available in emacs and vi insertion modes.
 bindkey -M emacs '\C-x\C-e' edit-command-line
 bindkey -M viins '\C-x\C-e' edit-command-line
+bindkey -M emacs '^O' edit-command-line
+bindkey -M viins '^O' edit-command-line
 
 # Sudo Toggle
 # Toggles 'sudo ' at the start of the current command line

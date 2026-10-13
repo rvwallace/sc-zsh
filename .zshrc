@@ -19,7 +19,7 @@ function _source() {
             source "$file"
             local end=$SECONDS
             local duration=$((end - start))
-            printf "SOURCED %-30s %0.4fs\n" "$(basename "$file")" "$duration"
+            printf "SOURCED %-30s %0.4fs\n" "${file:t}" "$duration" >&2
         else
             source "$file"
         fi
@@ -56,26 +56,25 @@ if [[ -d "$SC_USER_COMPLETIONS_DIR" ]]; then
     fpath=("$SC_USER_COMPLETIONS_DIR" $fpath)
 fi
 
-# Note: compinit is now handled by Zinit via zicompinit; zicdreplay
-# (see includes/plugins.zsh - atload on zsh-completions plugin for optimal performance)
-
-
 _source "$ZDOTDIR/includes/paths.zsh"
 _source "$ZDOTDIR/includes/exports.zsh"
+_source "$ZDOTDIR/includes/cache.zsh"
 _source "$ZDOTDIR/includes/plugins.zsh"
 _source "$ZDOTDIR/includes/options.zsh"
 _source "$ZDOTDIR/includes/keybindings.zsh"
 _source "$ZDOTDIR/includes/app_integrations.zsh"
+_source "$ZDOTDIR/includes/gnu_utils.zsh"
 _source "$ZDOTDIR/includes/aliases.zsh"
 
-# Defer local customizations until core completion and navigation jobs are loaded.
-# This is safe to defer as it's user-specific customizations, not core functionality
-if [[ -f "$_zshrc_local_post" ]] && command -v zinit &> /dev/null; then
-    zinit ice wait"2" lucid nocd atload"source '$_zshrc_local_post'"
-    zinit light zdharma-continuum/null
-elif [[ -f "$_zshrc_local_post" ]]; then
-    # Fallback if zinit isn't available (shouldn't happen, but safe fallback)
-    source "$_zshrc_local_post"
+_source "$_zshrc_local_post"
+# Personal PATH changes can invalidate GNU command hashes.
+_sc_gnu_utils
+
+# Bind wrappers after every integration and personal widget exists.
+_sc_load_widgets
+
+if (( $+commands[fastfetch] )) && [[ "$ENABLE_FASTFETCH" == true ]]; then
+    fastfetch
 fi
 
 if [[ "$SC_PROFILE" == "1" ]]; then

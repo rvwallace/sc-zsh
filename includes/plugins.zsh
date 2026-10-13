@@ -1,94 +1,77 @@
 # shellcheck shell=zsh
-# Zinit Installation & Plugin Management
-# --------------------------------------
+[[ -o interactive ]] || return 0
 
-# -----------------
-# 1. Bootstrapping
-# -----------------
-ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
+_sc_plugin_source() {
+    local file="$SC_PLUGIN_DIR/$1/$2"
+    if [[ -r "$file" ]]; then
+        _source "$file"
+    else
+        print -u2 -- "[sc-zsh] Missing plugin $1. Run: zsh $ZDOTDIR/scripts/plugins.zsh install"
+        return 1
+    fi
+}
 
-if ! command -v git &> /dev/null; then
-    echo "[SilentCastle zsh] git is required to manage zinit; exiting." >&2
-    return 1 2>/dev/null || exit 1
+[[ -d "$SC_PLUGIN_DIR/zsh-completions/src" ]] && fpath=("$SC_PLUGIN_DIR/zsh-completions/src" $fpath)
+autoload -Uz compinit
+zmodload zsh/stat
+zmodload zsh/datetime
+local dump="$ZSH_CACHE_DIR/zcompdump-$ZSH_VERSION"
+local signature="${(j:\n:)fpath}" cached_signature='' now=$EPOCHSECONDS
+local -A dump_stat
+[[ -r "$dump.fpath" ]] && cached_signature="$(<"$dump.fpath")"
+if [[ -s "$dump" ]] && zstat -H dump_stat "$dump" 2>/dev/null &&
+   [[ "$cached_signature" == "$signature" ]] &&
+   (( now - dump_stat[mtime] < SC_COMPLETION_MAX_AGE )); then
+    compinit -C -d "$dump"
+else
+    # Audit on rebuild. -i excludes insecure directories without prompting.
+    local temporary="$dump.$$.${RANDOM}"
+    if [[ -w "$ZSH_CACHE_DIR" ]]; then
+        compinit -i -d "$temporary"
+    else
+        compinit -i -D
+    fi
+    if [[ -s "$temporary" ]]; then
+        print -r -- "$signature" >| "$temporary.fpath"
+        command rm -f -- "$dump.zwc"
+        command mv -f -- "$temporary" "$dump" 2>/dev/null
+        command mv -f -- "$temporary.fpath" "$dump.fpath" 2>/dev/null
+    fi
 fi
-
-# Install zinit if not already installed
-if [[ ! -d "$ZINIT_HOME" ]]; then
-    mkdir -p "$(dirname $ZINIT_HOME)"
-    if ! git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"; then
-        echo "[SilentCastle zsh] failed to clone zinit repository; exiting." >&2
-        return 1 2>/dev/null || exit 1
+if [[ -s "$dump" && ! -s "$dump.zwc" && -w "$ZSH_CACHE_DIR" ]]; then
+    local compiled="$dump.$$.${RANDOM}.zwc"
+    if zcompile -R "$compiled" "$dump" 2>/dev/null; then
+        command mv -f -- "$compiled" "$dump.zwc" 2>/dev/null || command rm -f -- "$compiled"
     fi
 fi
 
-if [[ ! -f "$ZINIT_HOME/zinit.zsh" ]]; then
-    echo "[SilentCastle zsh] zinit installation incomplete; exiting." >&2
-    return 1 2>/dev/null || exit 1
+# Carapace must not replace repository or personal completion definitions.
+typeset -gA _SC_CUSTOM_COMPLETIONS=()
+local -a custom_functions=("$ZDOTDIR"/completions/_*(N:t) "$SC_USER_COMPLETIONS_DIR"/_*(N:t))
+local command_name completion
+for command_name completion in "${(@kv)_comps}"; do
+    if (( ${custom_functions[(Ie)$completion]} )); then
+        _SC_CUSTOM_COMPLETIONS[$command_name]="$completion"
+    fi
+done
+
+_sc_plugin_source zsh-history-substring-search zsh-history-substring-search.zsh
+if (( $+widgets[history-substring-search-up] )); then
+    bindkey -M emacs '^P' history-substring-search-up
+    bindkey -M emacs '^N' history-substring-search-down
+    bindkey -M vicmd k history-substring-search-up
+    bindkey -M vicmd j history-substring-search-down
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
 fi
 
-_source "$ZINIT_HOME/zinit.zsh"
-
-# Direct completion dump to user cache directory
-typeset -gA ZINIT
-ZINIT[ZCOMPDUMP_PATH]="$ZSH_CACHE_DIR/zcompdump"
-
-# -----------------
-# 2. Guard Clause
-# -----------------
-# Stop here if non-interactive (unless profiling)
-if [[ ! -o interactive && "${SC_PROFILE:-}" != 1 ]]; then
-    return
-fi
-
-# -----------------
-# 3. Core Plugins
-# -----------------
-
-# History substring search widgets must exist before the syntax highlighter
-# binds ZLE widgets, otherwise the highlighter reports unhandled widget names.
-zinit ice lucid
-zinit light zsh-users/zsh-history-substring-search
-
-# Keybindings for history search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-bindkey -M emacs '^P' history-substring-search-up
-bindkey -M emacs '^N' history-substring-search-down
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
-
-# Fast core plugins with for-syntax (using light mode for better performance)
-zinit wait"0" lucid light-mode for \
-    zdharma-continuum/fast-syntax-highlighting \
-    zsh-users/zsh-autosuggestions \
-    chrissicool/zsh-256color
-
-# Cache generated shell init output for synchronous app integrations.
-zinit ice lucid
-zinit light mroth/evalcache
-
-# Completions (loaded last with zicompinit + zicdreplay for optimal performance)
-zinit wait"0" lucid light-mode nocd blockf \
-    atpull'zinit creinstall -q zsh-users/zsh-completions' \
-    atload"zicompinit; zicdreplay" for \
-        zsh-users/zsh-completions
-
-# -----------------
-# 4. Utilities
-# -----------------
-
-# FZF tab completion (conditional on fzf being available)
-zinit ice wait"1" lucid nocd has'fzf' atload'
-    zstyle ":fzf-tab:complete:cd:*" fzf-preview "ls \$realpath"
-    zstyle ":fzf-tab:complete:__zoxide_z:*" fzf-preview "ls \$realpath"
-'
-zinit light Aloxaf/fzf-tab
-
-# -----------------
-# 5. OMZ Snippets
-# -----------------
-zinit wait"3" lucid for \
-    OMZP::extract \
-    OMZP::gitignore \
-    OMZP::gnu-utils
-
+_sc_load_widgets() {
+    if (( $+commands[fzf] )); then
+        zstyle ':completion:*' menu no
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'command ls "$realpath"'
+        zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'command ls "$realpath"'
+        _sc_plugin_source fzf-tab fzf-tab.plugin.zsh
+    fi
+    _sc_plugin_source zsh-autosuggestions zsh-autosuggestions.zsh
+    _sc_plugin_source fast-syntax-highlighting fast-syntax-highlighting.plugin.zsh
+}

@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 2026-10-15
+
+- Added the Toolbox `tmux.new` alias to start tmux without restoring the last tmux-resurrect snapshot
+
 ### 2026-10-13
 
 - Added `VERSION` starting at `0.1.0`, documented the release/tag convention, and displayed configuration version and Git revision in doctor

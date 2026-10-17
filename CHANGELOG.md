@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 2026-10-17
+
+- Made the cache and tmux tests create temporary directories with `${TMPDIR:-/tmp}` so they run on Linux and macOS
+
 ### 2026-10-15
 
 - Added the Toolbox `tmux.new` alias to start tmux without restoring the last tmux-resurrect snapshot

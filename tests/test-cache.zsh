@@ -3,8 +3,11 @@ emulate -LR zsh
 setopt err_exit pipe_fail
 unsetopt bg_nice
 local root="${0:A:h:h}"
-local test_dir=$(mktemp -d /private/tmp/sc-zsh-cache.XXXXXX)
-trap '[[ "$test_dir" == /private/tmp/sc-zsh-cache.* ]] && chmod -R u+w "$test_dir" && rm -rf -- "$test_dir"' EXIT
+local tmp_root=${TMPDIR:-/tmp}
+tmp_root=${tmp_root%/}
+local test_dir
+test_dir=$(mktemp -d "$tmp_root/sc-zsh-cache.XXXXXX") || exit 1
+trap '[[ -n "$test_dir" && "$test_dir" == "$tmp_root"/sc-zsh-cache.* ]] && chmod -R u+w "$test_dir" && rm -rf -- "$test_dir"' EXIT
 export SC_TEST_CALLS="$test_dir/calls"
 export ZSH_CACHE_DIR="$test_dir/cache"
 mkdir -p "$ZSH_CACHE_DIR" "$test_dir/bin"

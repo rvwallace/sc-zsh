@@ -2,9 +2,12 @@
 emulate -LR zsh
 setopt err_exit pipe_fail
 local root="${0:A:h:h}"
-local test_dir=$(mktemp -d /private/tmp/sc-zsh-tmux.XXXXXX)
+local tmp_root=${TMPDIR:-/tmp}
+tmp_root=${tmp_root%/}
+local test_dir
+test_dir=$(mktemp -d "$tmp_root/sc-zsh-tmux.XXXXXX") || exit 1
 local socket="$test_dir/socket"
-trap 'tmux -S "$socket" kill-server 2>/dev/null || true; [[ "$test_dir" == /private/tmp/sc-zsh-tmux.* ]] && rm -rf -- "$test_dir"' EXIT
+trap 'tmux -S "$socket" kill-server 2>/dev/null || true; [[ -n "$test_dir" && "$test_dir" == "$tmp_root"/sc-zsh-tmux.* ]] && rm -rf -- "$test_dir"' EXIT
 local -a launch=(env -u FPATH -u TOOLBOX_LOADED -u ZPFX -u FAST_WORK_DIR)
 if [[ "${1:-}" != --personal ]]; then
     launch+=("HOME=$test_dir" "XDG_CACHE_HOME=$test_dir/cache" "XDG_CONFIG_HOME=$test_dir/config")

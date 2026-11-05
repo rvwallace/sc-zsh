@@ -10,6 +10,7 @@ The startup wrapper uses `uv run --script`. Inline metadata declares Python 3.9 
 zsh tests/test-startup.zsh
 zsh tests/test-cache.zsh
 uv run --script tests/test-setup.py
+uv run --script tests/test-rex-integration.py
 zsh tests/test-tmux.zsh
 zsh tests/test-tmux.zsh --personal
 ```
@@ -19,6 +20,8 @@ The startup test opens a real pseudo-terminal with a temporary home. It tests fe
 The cache test uses mock commands in a temporary directory. It tests cache reuse, executable replacement, argument and setting changes, failed and malformed output, concurrent generation, and read-only fallback. It also tests GNU mappings and built-in preservation after `rehash`.
 
 The tests do not delete personal history, caches, or plugin installations.
+
+The Rex integration test uses isolated Zsh pseudo-terminals and temporary Starship configuration. It checks OSC 133 ordering, success/failure exit codes, multiline prompts and commands, interrupted jobs, empty input, repeated sourcing, and non-Rex/tmux guards. It does not modify a running Rex session or personal shell files.
 
 Setup tests use local Git repositories, temporary homes, and paths with spaces. They check fresh/offline setup, repeat runs, bootstrap backups, private file modes, custom directories, read-only doctor behavior, shallow pinned fetches, dirty plugins, partial failures, and temporary checkout cleanup. No GitHub download is needed.
 

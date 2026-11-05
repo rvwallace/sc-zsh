@@ -122,6 +122,10 @@ brew install coreutils findutils gnu-sed gnu-tar grep gawk
 
 The inherited `TERM` is preserved, including `tmux-256color`. Zinit and zsh-256color no longer alter terminal setup. The configuration does not change [tmux-conf](https://github.com/rvwallace/tmux-conf), its scrollback, or Starship's prompt layout.
 
+In interactive Rex terminals, `includes/rex_integration.zsh` adds invisible OSC 133 prompt, command, and completion markers after Starship and personal prompt hooks load. These enable terminal features such as prompt navigation without changing the visible prompt. The integration skips tmux, non-Rex terminals, redirected output, and already-loaded Ghostty/Kitty marker integrations. Repeated sourcing does not register duplicate hooks.
+
+Open a new Rex shell to activate it. Existing shells can run `source "$ZDOTDIR/includes/rex_integration.zsh"`; only subsequent prompts and commands receive markers. Existing scrollback is not marked retroactively. This does not change the separate Rex history picker's text-based parsing.
+
 | Key | Action |
 | --- | --- |
 | Ctrl-O or Ctrl-X Ctrl-E | Edit the command line in `$EDITOR` |
@@ -172,6 +176,7 @@ variable = "SC_AWS_TOKEN_TTL"
 zsh tests/test-startup.zsh
 zsh tests/test-cache.zsh
 uv run --script tests/test-setup.py
+uv run --script tests/test-rex-integration.py
 zsh tests/test-tmux.zsh --personal
 zsh tests/test-startup.zsh --benchmark --samples 10
 zsh tests/test-startup.zsh --benchmark --personal --samples 10

@@ -77,6 +77,9 @@ if (( $+commands[fastfetch] )) && [[ "$ENABLE_FASTFETCH" == true ]]; then
     fastfetch
 fi
 
+# Register after prompt themes and personal hooks; leave other terminals untouched.
+_source "$ZDOTDIR/includes/rex_integration.zsh"
+
 if [[ "$SC_PROFILE" == "1" ]]; then
     zprof
 fi

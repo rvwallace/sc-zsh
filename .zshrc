@@ -71,7 +71,9 @@ _source "$_zshrc_local_post"
 _sc_gnu_utils
 
 # Bind wrappers after every integration and personal widget exists.
-_sc_load_widgets
+if [[ -o interactive ]]; then
+    _sc_load_widgets
+fi
 
 if (( $+commands[fastfetch] )) && [[ "$ENABLE_FASTFETCH" == true ]]; then
     fastfetch

@@ -43,6 +43,8 @@ Interactive shells then load these components:
 
 No plugin installation, update, or timed loading occurs during startup. Missing plugins produce a setup message. Built-in completion remains available.
 
+Agents that explicitly source `.zshrc` in a noninteractive shell still load the personal post file and its command functions, but skip interactive plugins and widgets. Ordinary noninteractive Zsh commands do not read `.zshrc`; source Toolbox's `shell/init.sh` explicitly when those commands need its shell functions.
+
 | Setting | Default | Purpose |
 | --- | --- | --- |
 | `SC_USER_DIR` | `~/.sc-zsh` | Personal functions and completions |

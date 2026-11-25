@@ -183,6 +183,18 @@ def functional(home):
     result = subprocess.run([ZSH, "-d", "-c", "print $+functions[compdef]"], env=env,
                             capture_output=True, text=True, check=True)
     assert result.stdout.strip() == "0" and not result.stderr, result
+    # Agents may explicitly source .zshrc without requesting an interactive shell.
+    post = home / ".zshrc.local.post"
+    post.write_text("sc_test_command() { print SC_COMMAND_OK; }\n")
+    try:
+        result = subprocess.run(
+            [ZSH, "-d", "-c", 'source "$ZDOTDIR/.zshrc"; sc_test_command; '
+             'print $+functions[compdef]:$+functions[_sc_load_widgets]'],
+            env=env, capture_output=True, text=True, check=True,
+        )
+        assert result.stdout.strip() == "SC_COMMAND_OK\n0:0" and not result.stderr, result
+    finally:
+        post.unlink()
     print("PASS: PTY startup, widgets, native cd, Zoxide, PATH, history, SSH arguments, and noninteractive guard")
 
 

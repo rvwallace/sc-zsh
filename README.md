@@ -2,7 +2,7 @@
 
 sc-zsh loads plugins, completions, and personal configuration before the first prompt. It uses Zsh syntax for existing shell commands and environment-variable snippets.
 
-The configuration keeps shell setup separate from personal tools in [Toolbox](https://github.com/rvwallace/toolbox). [sc-nu](https://github.com/rvwallace/sc-nu) is the related Nushell configuration.
+The configuration keeps shell setup separate from personal tools in [Toolbox](https://github.com/rvwallace/toolbox). The former Nushell configuration, `sc-nu`, is archived at `~/silentcastle/projects/archive/sc-nu`.
 
 ## Setup
 
